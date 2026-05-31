@@ -9,7 +9,7 @@ namespace TpJugadores.Models
     // la clase Jugador hereda de Persona e implementa la interfaz IRegistrable
     public class Jugador : Persona, IRegistrable
     {
-        //numero de camiseta del jugador
+        //numero de camiseta del jugador de futbol
         public int Numero { get; set; }
         // posicion dentro de la cancha
         public string Posicion { get; set; }
