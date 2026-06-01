@@ -44,21 +44,21 @@ namespace TpJugadores.Views
 
             Console.WriteLine();
 
-            Console.WriteLine($"📅 {DateTime.Now:dd/MM/yyyy HH:mm}");
+            Console.WriteLine($" {DateTime.Now:dd/MM/yyyy HH:mm}");
 
             Console.WriteLine();
 
-            Console.WriteLine("⚽ [1] Agregar equipo");
-            Console.WriteLine("📋 [2] Listar equipos");
-            Console.WriteLine("🔎 [3] Buscar equipo");
-            Console.WriteLine("👤 [4] Agregar jugador");
-            Console.WriteLine("🏟️ [5] Registrar partido");
-            Console.WriteLine("🏆 [6] Mostrar campeón");
-            Console.WriteLine("📊 [7] Tabla de posiciones");
-            Console.WriteLine("👥 [8] Ver jugadores");
-            Console.WriteLine("📈 [9] Estadísticas");
-            Console.WriteLine("🥇 [10] Top 3 equipos");
-            Console.WriteLine("🚪 [0] Salir");
+            Console.WriteLine("[1] Agregar equipo");
+            Console.WriteLine("[2] Listar equipos");
+            Console.WriteLine("[3] Buscar equipo");
+            Console.WriteLine("[4] Agregar jugador");
+            Console.WriteLine("[5] Registrar partido");
+            Console.WriteLine("[6] Mostrar campeon");
+            Console.WriteLine("[7] Tabla de posiciones");
+            Console.WriteLine("[8] Ver jugadores");
+            Console.WriteLine("[9] Estadisticas");
+            Console.WriteLine("[10] Top 3 equipos");
+            Console.WriteLine("[0] Salir");
 
             Console.WriteLine();
 
@@ -96,49 +96,152 @@ namespace TpJugadores.Views
         // Pide nombre de equipo
         public string PedirNombreEquipo()
         {
-            Console.Write("Nombre del equipo: ");
-            return Console.ReadLine();
+            string nombre;
+
+            while (true)
+            {
+                Console.Write("Nombre del equipo: ");
+                nombre = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(nombre))
+                {
+                    MostrarError("El nombre no puede estar vacio");
+                    continue;
+                }
+
+                if (!nombre.All(c => char.IsLetter(c) || char.IsWhiteSpace(c)))
+                {
+                    MostrarError("Solo se permiten letras");
+                    continue;
+                }
+
+                return nombre;
+            }
         }
 
         // Pide nombre del jugador
         public string PedirNombreJugador()
         {
-            Console.Write("Nombre del jugador: ");
-            return Console.ReadLine();
+            string nombre;
+
+            while (true)
+            {
+                Console.Write("Nombre del jugador: ");
+                nombre = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(nombre))
+                {
+                    MostrarError("El nombre no puede estar vacio");
+                    continue;
+                }
+
+                if (!nombre.All(c => char.IsLetter(c) || char.IsWhiteSpace(c)))
+                {
+                    MostrarError("Solo se permiten letras");
+                    continue;
+                }
+
+                return nombre;
+            }
         }
 
         // Pide edad
         public int PedirEdad()
         {
+            int edad;
+
             Console.Write("Edad: ");
-            return int.Parse(Console.ReadLine());
+
+            while (!int.TryParse(Console.ReadLine(), out edad))
+            {
+                MostrarError("Ingrese un numero valido");
+                Console.Write("Edad: ");
+            }
+
+            return edad;
+        }
+        public string PedirPosicion()
+        {
+            while (true)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Seleccione la posicion:");
+                Console.WriteLine("1 - Arquero");
+                Console.WriteLine("2 - Defensor");
+                Console.WriteLine("3 - Mediocampista");
+                Console.WriteLine("4 - Delantero");
+                Console.Write("Opcion: ");
+
+                string opcion = Console.ReadLine();
+
+                switch (opcion)
+                {
+                    case "1":
+                        return "Arquero";
+
+                    case "2":
+                        return "Defensor";
+
+                    case "3":
+                        return "Mediocampista";
+
+                    case "4":
+                        return "Delantero";
+
+                    default:
+                        MostrarError("Opcion invalida");
+                        break;
+                }
+            }
         }
 
         // Pide numero de camiseta
         public int PedirNumero()
         {
+            int numero;
+
             Console.Write("Numero de camiseta: ");
-            return int.Parse(Console.ReadLine());
+
+            while (!int.TryParse(Console.ReadLine(), out numero))
+            {
+                MostrarError("Ingrese un numero valido");
+                Console.Write("Numero de camiseta: ");
+            }
+
+            return numero;
         }
 
-        // Pide posicion
-        public string PedirPosicion()
-        {
-            Console.Write("Posicion: ");
-            return Console.ReadLine();
-        }
+        
         // Pide los goles del equipo local
         public int PedirGolesLocal()
         {
+            int goles;
+
             Console.Write("Goles del local: ");
-            return int.Parse(Console.ReadLine());
+
+            while (!int.TryParse(Console.ReadLine(), out goles))
+            {
+                MostrarError("Ingrese un numero valido");
+                Console.Write("Goles del local: ");
+            }
+
+            return goles;
         }
 
         // Pide los goles del equipo visitante
         public int PedirGolesVisitante()
         {
+            int goles;
+
             Console.Write("Goles del visitante: ");
-            return int.Parse(Console.ReadLine());
+
+            while (!int.TryParse(Console.ReadLine(), out goles))
+            {
+                MostrarError("Ingrese un numero valido");
+                Console.Write("Goles del visitante: ");
+            }
+
+            return goles;
         }
         // Espera una tecla para continuar
         public void Pausa()

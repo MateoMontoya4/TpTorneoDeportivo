@@ -133,6 +133,25 @@ namespace TpJugadores.Controllers
         {
             string nombre = _view.PedirNombreEquipo();
 
+            if (string.IsNullOrWhiteSpace(nombre))
+            {
+                _view.MostrarError("El nombre no puede estar vacio");
+                return;
+            }
+
+            if (!nombre.All(c => char.IsLetter(c) || char.IsWhiteSpace(c)))
+            {
+                _view.MostrarError("El nombre solo puede contener letras");
+                  
+                return;
+            }
+
+            if (_torneo.BuscarEquipo(nombre) != null)
+            {
+                _view.MostrarError("Ese equipo ya existe");
+                return;
+            }
+
             Equipo equipo = new Equipo(nombre);
 
             _torneo.AgregarEquipo(equipo);
@@ -188,6 +207,31 @@ namespace TpJugadores.Controllers
             int edad = _view.PedirEdad();
             int numero = _view.PedirNumero();
             string posicion = _view.PedirPosicion();
+            if (edad < 15 || edad > 50)
+            {
+                _view.MostrarError("Edad invalida");
+                return;
+            }
+
+            if (numero <= 0 || numero > 99)
+            {
+                _view.MostrarError("Numero invalido");
+                return;
+            }
+
+            if (equipo.Jugadores.Any(j =>
+                j.Nombre.ToLower() == nombreJugador.ToLower()))
+            {
+                _view.MostrarError("Ese jugador ya existe");
+                return;
+            }
+
+            if (equipo.Jugadores.Any(j =>
+                j.Numero == numero))
+            {
+                _view.MostrarError("Ese numero ya esta ocupado");
+                return;
+            }
 
             Jugador jugador = new Jugador(
                 nombreJugador,
@@ -220,23 +264,24 @@ namespace TpJugadores.Controllers
         private void MostrarTabla()
         {
             Console.WriteLine();
-            Console.WriteLine("=================================");
-            Console.WriteLine("POS   EQUIPO           PUNTOS");
-            Console.WriteLine("=================================");
+            Console.WriteLine("====================================");
+            Console.WriteLine("      TABLA DE POSICIONES");
+            Console.WriteLine("====================================");
+            Console.WriteLine("POS   EQUIPO           PTS");
+            Console.WriteLine("------------------------------------");
 
             int posicion = 1;
 
             foreach (Equipo equipo in _torneo.Equipos
-                     .OrderByDescending(e => e.CalcularPuntos()))
+                .OrderByDescending(e => e.CalcularPuntos()))
             {
                 Console.WriteLine(
-                    $"{posicion,-5}{equipo.Nombre,-15}{equipo.CalcularPuntos()}"
-                );
+                    $"{posicion,-5}{equipo.Nombre,-15}{equipo.CalcularPuntos()}");
 
                 posicion++;
             }
 
-            Console.WriteLine("=================================");
+            Console.WriteLine("====================================");
         }
         // Registra un partido entre dos equipos
         private void RegistrarPartido()
@@ -249,6 +294,13 @@ namespace TpJugadores.Controllers
             Console.Write("Equipo visitante: ");
             string nombreVisitante = Console.ReadLine();
 
+            if (nombreLocal.ToLower() ==
+             nombreVisitante.ToLower())
+            {
+                _view.MostrarError(
+                    "Un equipo no puede jugar contra si mismo");
+                return;
+            }
             Equipo local = _torneo.BuscarEquipo(nombreLocal);
             Equipo visitante = _torneo.BuscarEquipo(nombreVisitante);
 
@@ -286,17 +338,17 @@ namespace TpJugadores.Controllers
                 .ToList();
 
             Console.WriteLine();
-            Console.WriteLine("🏆 TOP 3 DEL TORNEO");
+            Console.WriteLine("===== TOP 3 DEL TORNEO =====");
             Console.WriteLine();
 
             if (top.Count > 0)
-                Console.WriteLine($"🥇 {top[0].Nombre} - {top[0].CalcularPuntos()} pts");
+                Console.WriteLine($"1° {top[0].Nombre} - {top[0].CalcularPuntos()} pts");
 
             if (top.Count > 1)
-                Console.WriteLine($"🥈 {top[1].Nombre} - {top[1].CalcularPuntos()} pts");
+                Console.WriteLine($"2° {top[1].Nombre} - {top[1].CalcularPuntos()} pts");
 
             if (top.Count > 2)
-                Console.WriteLine($"🥉 {top[2].Nombre} - {top[2].CalcularPuntos()} pts");
+                Console.WriteLine($"3° {top[2].Nombre} - {top[2].CalcularPuntos()} pts");
         }
         private void MostrarEstadisticas()
         {
