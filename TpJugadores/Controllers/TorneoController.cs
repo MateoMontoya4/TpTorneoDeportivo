@@ -131,118 +131,384 @@ namespace TpJugadores.Controllers
         // Agrega un equipo
         private void AgregarEquipo()
         {
-            string nombre = _view.PedirNombreEquipo();
+            Console.Clear();
 
-            if (string.IsNullOrWhiteSpace(nombre))
+            Console.ForegroundColor = ConsoleColor.Cyan;
+
+            _view.LetrasCentradas("====================================================");
+            _view.LetrasCentradas("                AGREGAR NUEVO EQUIPO                ");
+            _view.LetrasCentradas("====================================================");
+
+            Console.ResetColor();
+
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            _view.LetrasCentradas("EQUIPOS REGISTRADOS");
+            Console.ResetColor();
+
+            Console.WriteLine();
+
+            foreach (Equipo equipo in _torneo.Equipos)
             {
-                _view.MostrarError("El nombre no puede estar vacio");
-                return;
+                _view.LetrasCentradas("- " + equipo.Nombre);
             }
 
-            if (!nombre.All(c => char.IsLetter(c) || char.IsWhiteSpace(c)))
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            _view.LetrasCentradas("INGRESE EL NOMBRE DEL NUEVO EQUIPO");
+            Console.ResetColor();
+
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            _view.LetrasCentradas("ESCRIBA 0 PARA VOLVER AL MENU");
+            Console.ResetColor();
+
+            Console.WriteLine();
+
+
+            string nombre;
+
+            while (true)
             {
-                _view.MostrarError("El nombre solo puede contener letras");
-                  
-                return;
+                Console.Write("Nombre del equipo: ");
+                nombre = Console.ReadLine();
+
+
+                if (nombre == "0")
+                {
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(nombre))
+                {
+                    _view.MostrarError("El nombre no puede estar vacio");
+                    continue;
+                }
+
+                if (nombre.Any(char.IsDigit))
+                {
+                    _view.MostrarError("El nombre no puede contener numeros");
+                    continue;
+                }
+
+                if (_torneo.BuscarEquipo(nombre) != null)
+                {
+                    _view.MostrarError("Ese equipo ya existe");
+                    continue;
+                }
+
+                break;
             }
 
-            if (_torneo.BuscarEquipo(nombre) != null)
-            {
-                _view.MostrarError("Ese equipo ya existe");
-                return;
-            }
+            Equipo nuevoEquipo = new Equipo(nombre);
 
-            Equipo equipo = new Equipo(nombre);
+            _torneo.AgregarEquipo(nuevoEquipo);
 
-            _torneo.AgregarEquipo(equipo);
-
-            _view.MostrarMensaje("Equipo agregado correctamente");
+            _view.MostrarMensaje($"El equipo '{nombre}' fue agregado correctamente");
         }
-
         // Lista los equipos
         private void ListarEquipos()
         {
-            foreach (Equipo equipo in _torneo.Equipos)
+            Console.Clear();
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+
+            _view.LetrasCentradas("====================================================");
+            _view.LetrasCentradas("                 LISTADO DE EQUIPOS                 ");
+            _view.LetrasCentradas("====================================================");
+
+            Console.ResetColor();
+
+            Console.WriteLine();
+            Console.WriteLine();
+
+            _view.LetrasCentradas("----------------------------------------------------");
+            _view.LetrasCentradas(" N°   EQUIPO                     PUNTOS");
+            _view.LetrasCentradas("----------------------------------------------------");
+
+            int posicion = 1;
+
+            foreach (Equipo equipo in _torneo.Equipos
+                .OrderByDescending(e => e.CalcularPuntos()))
             {
-                _view.MostrarMensaje(
-                    equipo.MostrarInfo()
+                _view.LetrasCentradas(
+                    $" {posicion,-3}  {equipo.Nombre,-25} {equipo.CalcularPuntos(),3}"
                 );
+
+                posicion++;
             }
+
+            _view.LetrasCentradas("----------------------------------------------------");
+            _view.LetrasCentradas($" Total de equipos registrados: {_torneo.Equipos.Count}");
+            _view.LetrasCentradas("----------------------------------------------------");
         }
 
         // Busca un equipo por nombre
         private void BuscarEquipo()
         {
-            string nombre = _view.PedirNombreEquipo();
+            Console.Clear();
 
-            Equipo equipo = _torneo.BuscarEquipo(nombre);
+            Console.ForegroundColor = ConsoleColor.Cyan;
 
-            if (equipo != null)
+            _view.LetrasCentradas("====================================================");
+            _view.LetrasCentradas("                  BUSCAR EQUIPO");
+            _view.LetrasCentradas("====================================================");
+
+            Console.ResetColor();
+
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            _view.LetrasCentradas("EQUIPOS DISPONIBLES");
+            Console.ResetColor();
+
+            Console.WriteLine();
+
+            foreach (Equipo equipo in _torneo.Equipos)
             {
-                _view.MostrarMensaje(
-                    equipo.MostrarInfo()
-                );
+                _view.LetrasCentradas("- " + equipo.Nombre);
             }
-            else
-            {
-                _view.MostrarError(
-                    "Equipo no encontrado"
-                );
-            }
-        }
-        // Agrega un jugador a un equipo
-        private void AgregarJugador()
-        {
-            string nombreEquipo = _view.PedirNombreEquipo();
 
-            Equipo equipo = _torneo.BuscarEquipo(nombreEquipo);
+            Console.WriteLine();
+            Console.WriteLine();
 
-            if (equipo == null)
+            Console.ForegroundColor = ConsoleColor.Green;
+            _view.LetrasCentradas("INGRESE EL NOMBRE DEL EQUIPO");
+            Console.ResetColor();
+
+            Console.WriteLine();
+
+            Console.Write("Nombre del equipo: ");
+            string nombre = Console.ReadLine();
+
+            Equipo encontrado = _torneo.BuscarEquipo(nombre);
+
+            if (encontrado == null)
             {
                 _view.MostrarError("Equipo no encontrado");
                 return;
             }
 
-            string nombreJugador = _view.PedirNombreJugador();
-            int edad = _view.PedirEdad();
-            int numero = _view.PedirNumero();
-            string posicion = _view.PedirPosicion();
-            if (edad < 15 || edad > 50)
+            Console.Clear();
+
+            Console.ForegroundColor = ConsoleColor.Green;
+
+            _view.LetrasCentradas("====================================================");
+            _view.LetrasCentradas($"        INFORMACION DE {encontrado.Nombre.ToUpper()}");
+            _view.LetrasCentradas("====================================================");
+
+            Console.ResetColor();
+
+            Console.WriteLine();
+
+            _view.LetrasCentradas($"Nombre   : {encontrado.Nombre}");
+            _view.LetrasCentradas($"Puntos   : {encontrado.CalcularPuntos()}");
+            _view.LetrasCentradas($"Victorias: {encontrado.Victorias}");
+            _view.LetrasCentradas($"Empates  : {encontrado.Empates}");
+            _view.LetrasCentradas($"Derrotas : {encontrado.Derrotas}");
+
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            _view.LetrasCentradas("====================================================");
+            Console.ResetColor();
+        }
+        // Agrega un jugador a un equipo
+        private void AgregarJugador()
+        {
+            Console.Clear();
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+
+            _view.LetrasCentradas("====================================================");
+            _view.LetrasCentradas("                 AGREGAR JUGADOR");
+            _view.LetrasCentradas("====================================================");
+
+            Console.ResetColor();
+
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            _view.LetrasCentradas("EQUIPOS DISPONIBLES");
+            Console.ResetColor();
+
+            Console.WriteLine();
+
+            foreach (Equipo equipo in _torneo.Equipos)
             {
-                _view.MostrarError("Edad invalida");
+                _view.LetrasCentradas("- " + equipo.Nombre);
+            }
+
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            _view.LetrasCentradas("ESCRIBA 0 PARA VOLVER AL MENU");
+            Console.ResetColor();
+
+            Console.WriteLine();
+
+            Console.Write("Nombre del equipo: ");
+            string nombreEquipo = Console.ReadLine();
+
+            if (nombreEquipo == "0")
+                return;
+
+            Equipo equipoSeleccionado = _torneo.BuscarEquipo(nombreEquipo);
+
+            if (equipoSeleccionado == null)
+            {
+                _view.MostrarError("Equipo no encontrado");
                 return;
             }
 
-            if (numero <= 0 || numero > 99)
+            Console.Clear();
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            _view.LetrasCentradas($"AGREGANDO JUGADOR A {equipoSeleccionado.Nombre.ToUpper()}");
+            Console.ResetColor();
+
+            Console.WriteLine();
+
+            string nombreJugador;
+
+            while (true)
             {
-                _view.MostrarError("Numero invalido");
-                return;
+                Console.Write("Nombre del jugador: ");
+                nombreJugador = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(nombreJugador))
+                {
+                    _view.MostrarError("El nombre no puede estar vacio");
+                    continue;
+                }
+
+                if (nombreJugador.Any(char.IsDigit))
+                {
+                    _view.MostrarError("El nombre no puede contener numeros");
+                    continue;
+                }
+
+                break;
+            }
+            Console.WriteLine();
+            Console.WriteLine("[1] Arquero");
+            Console.WriteLine("[2] Defensor");
+            Console.WriteLine("[3] Mediocampista");
+            Console.WriteLine("[4] Delantero");
+
+            string posicion = "";
+
+            while (true)
+            {
+                Console.Write("Seleccione posicion: ");
+                string opcion = Console.ReadLine();
+
+                switch (opcion)
+                {
+                    case "1":
+                        posicion = "Arquero";
+                        break;
+
+                    case "2":
+                        posicion = "Defensor";
+                        break;
+
+                    case "3":
+                        posicion = "Mediocampista";
+                        break;
+
+                    case "4":
+                        posicion = "Delantero";
+                        break;
+
+                    default:
+                        _view.MostrarError("Opcion invalida");
+                        continue;
+                }
+
+                break;
+            }
+            Console.WriteLine();
+
+            int edad;
+
+            while (true)
+            {
+                Console.Write("Edad: ");
+
+                if (!int.TryParse(Console.ReadLine(), out edad))
+                {
+                    _view.MostrarError("Ingrese un numero valido");
+                    continue;
+                }
+
+                if (edad < 15 || edad > 50)
+                {
+                    _view.MostrarError("La edad debe estar entre 15 y 50");
+                    continue;
+                }
+
+                break;
             }
 
-            if (equipo.Jugadores.Any(j =>
+            Console.WriteLine();
+
+            int numero;
+
+            while (true)
+            {
+                Console.Write("Numero de camiseta: ");
+
+                if (!int.TryParse(Console.ReadLine(), out numero))
+                {
+                    _view.MostrarError("Ingrese un numero valido");
+                    continue;
+                }
+
+                if (numero < 1 || numero > 99)
+                {
+                    _view.MostrarError("El numero debe estar entre 1 y 99");
+                    continue;
+                }
+
+                if (equipoSeleccionado.Jugadores.Any(j => j.Numero == numero))
+                {
+                    _view.MostrarError("Ese numero ya esta ocupado");
+                    continue;
+                }
+
+                break;
+            }
+
+            if (equipoSeleccionado.Jugadores.Any(j =>
                 j.Nombre.ToLower() == nombreJugador.ToLower()))
             {
                 _view.MostrarError("Ese jugador ya existe");
                 return;
             }
 
-            if (equipo.Jugadores.Any(j =>
-                j.Numero == numero))
-            {
-                _view.MostrarError("Ese numero ya esta ocupado");
-                return;
-            }
-
-            Jugador jugador = new Jugador(
+            Jugador nuevoJugador = new Jugador(
                 nombreJugador,
                 edad,
                 numero,
                 posicion
             );
 
-            equipo.AgregarJugador(jugador);
+            equipoSeleccionado.AgregarJugador(nuevoJugador);
 
-            _view.MostrarMensaje("Jugador agregado correctamente");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine();
+            _view.LetrasCentradas("========================================");
+            _view.LetrasCentradas("JUGADOR AGREGADO CORRECTAMENTE");
+            _view.LetrasCentradas($"Nombre: {nombreJugador}");
+            _view.LetrasCentradas($"Equipo: {equipoSeleccionado.Nombre}");
+            _view.LetrasCentradas($"Posicion: {posicion}");
+            _view.LetrasCentradas($"Camiseta N° {numero}");
+            _view.LetrasCentradas("========================================");
+            Console.ResetColor();
         }
         // Muestra el equipo con mas puntos
         private void MostrarCampeon()

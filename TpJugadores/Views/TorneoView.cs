@@ -6,25 +6,53 @@ using System.Threading.Tasks;
 
 namespace TpJugadores.Views
 {
+    
     public class TorneoView
     {
         public void MostrarBienvenida()
         {
             Console.Clear();
 
-            Console.ForegroundColor = ConsoleColor.Cyan;
+            // Título
+            Console.ForegroundColor = ConsoleColor.Red;
 
-            Console.WriteLine("========================================");
-            Console.WriteLine("      SISTEMA DE TORNEO DE FUTBOL");
-            Console.WriteLine("========================================");
+            LetrasCentradas("████████╗ ██████╗ ██████╗ ███╗   ██╗███████╗ ██████╗ ");
+            LetrasCentradas("╚══██╔══╝██╔═══██╗██╔══██╗████╗  ██║██╔════╝██╔═══██╗");
+            LetrasCentradas("   ██║   ██║   ██║██████╔╝██╔██╗ ██║█████╗  ██║   ██║");
+            LetrasCentradas("   ██║   ██║   ██║██╔══██╗██║╚██╗██║██╔══╝  ██║   ██║");
+            LetrasCentradas("   ██║   ╚██████╔╝██║  ██║██║ ╚████║███████╗╚██████╔╝");
+            LetrasCentradas("   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝ ╚═════╝ ");
+
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.White;
+            LetrasCentradas("═══════════════════════════════════════════════════════");
+            LetrasCentradas("     GESTION TORNEO DEPORTIVO 2026");
+            LetrasCentradas("═══════════════════════════════════════════════════════");
+
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            LetrasCentradas("GESTION DE EQUIPOS");
+            LetrasCentradas("GESTION DE JUGADORES");
+            LetrasCentradas("REGISTRO DE PARTIDOS");
+            LetrasCentradas("TABLA DE POSICIONES");
+            LetrasCentradas("ESTADISTICAS DEL TORNEO");
+
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.White;
+            LetrasCentradas("---------------------------------------------");
+            LetrasCentradas($"FECHA: {DateTime.Now:dd/MM/yyyy}");
+            LetrasCentradas($"HORA : {DateTime.Now:HH:mm:ss}");
+            LetrasCentradas("---------------------------------------------");
+
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            LetrasCentradas(">>> PRESIONE UNA TECLA PARA COMENZAR <<<");
 
             Console.ResetColor();
-
-            Console.WriteLine();
-            Console.WriteLine("Trabajo Practico N° 2");
-            Console.WriteLine("Arquitectura MVC");
-            Console.WriteLine();
-            Console.WriteLine("Presione una tecla para comenzar...");
 
             Console.ReadKey();
         }
@@ -36,33 +64,44 @@ namespace TpJugadores.Views
 
             Console.ForegroundColor = ConsoleColor.Cyan;
 
-            Console.WriteLine("╔══════════════════════════════════════╗");
-            Console.WriteLine("║         TORNEO APERTURA 2026         ║");
-            Console.WriteLine("╚══════════════════════════════════════╝");
+            LetrasCentradas("==============================================================");
+            LetrasCentradas("         TORNEO APERTURA 2026             ");
+            LetrasCentradas("==============================================================");
 
             Console.ResetColor();
 
             Console.WriteLine();
 
-            Console.WriteLine($" {DateTime.Now:dd/MM/yyyy HH:mm}");
+            Console.ForegroundColor = ConsoleColor.White;
+            LetrasCentradas($"FECHA: {DateTime.Now:dd/MM/yyyy}    HORA: {DateTime.Now:HH:mm:ss}");
+            Console.ResetColor();
+
+            Console.WriteLine();
+            LetrasCentradas("******************** MENU PRINCIPAL ********************");
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            LetrasCentradas("[1]  AGREGAR EQUIPO");
+            LetrasCentradas("[2]  LISTAR EQUIPOS");
+            LetrasCentradas("[3]  BUSCAR EQUIPO");
+            LetrasCentradas("[4]  AGREGAR JUGADOR");
+            LetrasCentradas("[5]  REGISTRAR PARTIDO");
+            LetrasCentradas("[6]  MOSTRAR CAMPEON");
+            LetrasCentradas("[7]  TABLA DE POSICIONES");
+            LetrasCentradas("[8]  VER JUGADORES");
+            LetrasCentradas("[9]  ESTADISTICAS");
+            LetrasCentradas("[10] TOP 3 EQUIPOS");
+            LetrasCentradas("[0]  SALIR");
+            Console.ResetColor();
 
             Console.WriteLine();
 
-            Console.WriteLine("[1] Agregar equipo");
-            Console.WriteLine("[2] Listar equipos");
-            Console.WriteLine("[3] Buscar equipo");
-            Console.WriteLine("[4] Agregar jugador");
-            Console.WriteLine("[5] Registrar partido");
-            Console.WriteLine("[6] Mostrar campeon");
-            Console.WriteLine("[7] Tabla de posiciones");
-            Console.WriteLine("[8] Ver jugadores");
-            Console.WriteLine("[9] Estadisticas");
-            Console.WriteLine("[10] Top 3 equipos");
-            Console.WriteLine("[0] Salir");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            LetrasCentradas("ELIJA UNA OPCION DEL MENU");
+            Console.ResetColor();
 
             Console.WriteLine();
-
-            Console.Write("Seleccione una opción: ");
+            Console.Write("Opcion: ");
 
             return Console.ReadLine();
         }
@@ -75,7 +114,7 @@ namespace TpJugadores.Views
             Console.ForegroundColor = ConsoleColor.Green;
 
             Console.WriteLine();
-            Console.WriteLine("✔ " + mensaje);
+            Console.WriteLine(mensaje);
 
             Console.ResetColor();
         }
@@ -88,7 +127,7 @@ namespace TpJugadores.Views
             Console.ForegroundColor = ConsoleColor.Red;
 
             Console.WriteLine();
-            Console.WriteLine("✖ " + error);
+            Console.WriteLine(error);
 
             Console.ResetColor();
         }
@@ -180,7 +219,9 @@ namespace TpJugadores.Views
                         return "Arquero";
 
                     case "2":
+                        Console.ReadKey();
                         return "Defensor";
+                        
 
                     case "3":
                         return "Mediocampista";
@@ -255,6 +296,15 @@ namespace TpJugadores.Views
             Console.ResetColor();
 
             Console.ReadKey();
+        }
+        public void LetrasCentradas(string texto)
+        {
+            int espacios = (Console.WindowWidth - texto.Length) / 2;
+
+            if (espacios < 0)
+                espacios = 0;
+
+            Console.WriteLine(new string(' ', espacios) + texto);
         }
 
     }
