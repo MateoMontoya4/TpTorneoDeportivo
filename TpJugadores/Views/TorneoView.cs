@@ -57,6 +57,10 @@ namespace TpJugadores.Views
             Console.ReadKey();
         }
 
+
+
+
+
         // Muestra el menu principal
         public string MostrarMenu()
         {
@@ -87,10 +91,9 @@ namespace TpJugadores.Views
             LetrasCentradas("[4]  AGREGAR JUGADOR");
             LetrasCentradas("[5]  REGISTRAR PARTIDO");
             LetrasCentradas("[6]  MOSTRAR CAMPEON");
-            LetrasCentradas("[7]  TABLA DE POSICIONES");
+            LetrasCentradas("[7] ELIMINAR EQUIPO DEL TORNEO");
             LetrasCentradas("[8]  VER JUGADORES");
-            LetrasCentradas("[9]  ESTADISTICAS");
-            LetrasCentradas("[10] TOP 3 EQUIPOS");
+            LetrasCentradas("[9]  ELIMINAR JUGADOR DEL TORNEO");
             LetrasCentradas("[0]  SALIR");
             Console.ResetColor();
 
@@ -106,8 +109,9 @@ namespace TpJugadores.Views
             return Console.ReadLine();
         }
 
-        // Muestra mensajes normales
-        // Muestra mensajes de exito en verde
+        
+
+        
 
         public void MostrarMensaje(string mensaje)
         {
@@ -120,8 +124,11 @@ namespace TpJugadores.Views
         }
 
 
+
+
+
         // Muestra mensajes de error
-        // Muestra errores en rojo
+        
         public void MostrarError(string error)
         {
             Console.ForegroundColor = ConsoleColor.Red;
@@ -131,6 +138,10 @@ namespace TpJugadores.Views
 
             Console.ResetColor();
         }
+
+
+
+
 
         // Pide nombre de equipo
         public string PedirNombreEquipo()
@@ -158,6 +169,9 @@ namespace TpJugadores.Views
             }
         }
 
+
+
+
         // Pide nombre del jugador
         public string PedirNombreJugador()
         {
@@ -184,6 +198,8 @@ namespace TpJugadores.Views
             }
         }
 
+
+
         // Pide edad
         public int PedirEdad()
         {
@@ -199,6 +215,11 @@ namespace TpJugadores.Views
 
             return edad;
         }
+
+
+
+
+
         public string PedirPosicion()
         {
             while (true)
@@ -219,7 +240,7 @@ namespace TpJugadores.Views
                         return "Arquero";
 
                     case "2":
-                        Console.ReadKey();
+                       
                         return "Defensor";
                         
 
@@ -235,6 +256,9 @@ namespace TpJugadores.Views
                 }
             }
         }
+
+
+
 
         // Pide numero de camiseta
         public int PedirNumero()
@@ -252,7 +276,10 @@ namespace TpJugadores.Views
             return numero;
         }
 
-        
+
+
+
+
         // Pide los goles del equipo local
         public int PedirGolesLocal()
         {
@@ -269,6 +296,9 @@ namespace TpJugadores.Views
             return goles;
         }
 
+
+
+
         // Pide los goles del equipo visitante
         public int PedirGolesVisitante()
         {
@@ -284,6 +314,10 @@ namespace TpJugadores.Views
 
             return goles;
         }
+
+
+
+
         // Espera una tecla para continuar
         public void Pausa()
         {
@@ -297,6 +331,11 @@ namespace TpJugadores.Views
 
             Console.ReadKey();
         }
+
+
+
+
+        //esto es para q las letras esten centradas y no todo al costado
         public void LetrasCentradas(string texto)
         {
             int espacios = (Console.WindowWidth - texto.Length) / 2;

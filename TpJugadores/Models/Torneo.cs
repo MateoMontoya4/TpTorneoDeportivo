@@ -39,7 +39,12 @@ namespace TpJugadores.Models
         {
             Partidos.Add(partido);
         }
-
+        //ELIMNAR UN EQUIPO
+        public bool EliminarEquipo(Equipo equipo)
+        {
+            if (equipo == null) return false;
+            return Equipos.Remove(equipo);
+        }
         // Busca un equipo por nombre
         public Equipo BuscarEquipo(string nombre)
         {

@@ -6,24 +6,22 @@ using System.Threading.Tasks;
 
 namespace TpJugadores.Models
 {
+    //La clase Equipo implementa la interfaz IPuntuable para calcular sus puntos
     public class Equipo : IPuntuable
     {
         // Nombre del equipo
         public string Nombre { get; set; }
 
-        // Cantidad de partidos ganados
+        // Contadores para las estadísticas del torneo
         public int Victorias { get; set; }
-
-        // Cantidad de empates
         public int Empates { get; set; }
-
-        // Cantidad de derrotas
         public int Derrotas { get; set; }
 
-        // Lista donde se guardan los jugadores del equipo
+
+        // La lista donde guardamos a todos los jugadores que pertenecen a este equipo
         public List<Jugador> Jugadores { get; set; }
 
-        // Constructor
+        // El constructor mete el nombre del equipo y arranca todo en cero y la lista vacía
         public Equipo(string nombre)
         {
             Nombre = nombre;
@@ -36,24 +34,36 @@ namespace TpJugadores.Models
             Jugadores = new List<Jugador>();
         }
 
-        // Agrega un jugador a la lista
+        // Recibe un jugador ya creado y lo mete en la lista del equipo
         public void AgregarJugador(Jugador jugador)
         {
             Jugadores.Add(jugador);
         }
+        
+        // Elimina un jugador de la lista del equipo usando su nombre
+        public bool EliminarJugador(string nombreJugador)
+        {
+            // Busca al jugador comparando los nombres en minúscula para que no haya drama con las mayúsculas
+            var jugador = Jugadores.FirstOrDefault(j => j.Nombre.ToLower() == nombreJugador.ToLower());
 
-        // Calcula los puntos del equipo
+            if (jugador != null)
+            {
+                return Jugadores.Remove(jugador); // Lo borra y devuelve true
+            }
+            return false; // Si no lo encuentra, devuelve false
+        }
+        // Multiplica las victorias por 3 y le suma los empates para dar el puntaje real
         public int CalcularPuntos()
         {
             return (Victorias * 3) + Empates;
         }
 
-        // Muestra informacion basica del equipo
+        // Arma un texto básico con el nombre del equipo y sus puntos para mostrar en el menú
         public string MostrarInfo()
         {
             return $"{Nombre} - Puntos: {CalcularPuntos()}";
         }
-        // Total de partidos jugados
+        // Suma todo para saber cuántos partidos jugó el equipo en total
         public int TotalPartidos()
         {
             return Victorias + Empates + Derrotas;
@@ -68,7 +78,7 @@ namespace TpJugadores.Models
             return (double)Victorias * 100 / TotalPartidos();
         }
 
-        // Porcentaje de empates
+        // Saca la cuenta matemática del porcentaje de partidos empatados
         public double PorcentajeEmpates()
         {
             if (TotalPartidos() == 0)
@@ -77,7 +87,7 @@ namespace TpJugadores.Models
             return (double)Empates * 100 / TotalPartidos();
         }
 
-        // Porcentaje de derrotas
+        // Saca la cuenta matemática del porcentaje de partidos perdidos
         public double PorcentajeDerrotas()
         {
             if (TotalPartidos() == 0)

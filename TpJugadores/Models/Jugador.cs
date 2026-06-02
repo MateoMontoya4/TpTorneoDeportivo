@@ -6,34 +6,30 @@ using System.Threading.Tasks;
 
 namespace TpJugadores.Models
 {
-    // la clase Jugador hereda de Persona e implementa la interfaz IRegistrable
+    // Acá Jugador hereda los datos de Persona y se conecta con la interfaz IRegistrable
     public class Jugador : Persona, IRegistrable
     {
-        //numero de camiseta del jugador de futbol
+        // Guardamos el número de camiseta
         public int Numero { get; set; }
         // posicion dentro de la cancha
         public string Posicion { get; set; }
 
-        //cantidad de goles q metio
-        public int Goles { get; set; }
+        
 
+        // El constructor pide los datos y con el base se los manda a la clase Persona
         public Jugador(string nombre, int edad, int numero, string posicion) : base(nombre, edad)
         {
             Numero = numero;
             Posicion = posicion;
-            Goles = 0;
+            
         }
 
-        // Suma un gol al jugador
-        public void MarcarGol()
-        {
-            Goles++;
-        }
+      
 
-        // Devuelve la informacion del jugador
+        // Este método junta todos los datos del jugador en un solo texto para mostrarlo lindo en pantalla
         public string ObtenerInfo()
         {
-            return $"{Nombre} - #{Numero} - {Posicion} - Goles: {Goles}";
+            return $"{Nombre} - #{Numero} - {Posicion} ";
         }
     }
 }

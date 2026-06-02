@@ -26,6 +26,11 @@ namespace TpJugadores.Controllers
 
             CargarDatosIniciales();
         }
+
+
+
+
+
         private void CargarDatosIniciales()
         {
             Equipo river = new Equipo("River");
@@ -48,14 +53,33 @@ namespace TpJugadores.Controllers
             _torneo.AgregarEquipo(racing);
 
             river.AgregarJugador(
-    new Jugador("Armani", 38, 1, "Arquero"));
+             new Jugador("Armani", 38, 1, "Arquero"));
 
             river.AgregarJugador(
                 new Jugador("Pezzella", 33, 6, "Defensor"));
 
             river.AgregarJugador(
                 new Jugador("Colidio", 25, 11, "Delantero"));
+
+            boca.AgregarJugador(
+                new Jugador("Andrada", 35, 1, "Arquero"));
+            boca.AgregarJugador(
+                new Jugador("Izquierdoz", 36, 2, "Defensor"));
+           boca.AgregarJugador(
+                new Jugador("Vazquez", 30, 9, "Delantero"));
+            racing.AgregarJugador(
+                new Jugador("Chila", 37, 1, "Arquero"));
+            racing.AgregarJugador(
+                new Jugador("Sigali", 34, 2, "Defensor"));
+            racing.AgregarJugador(
+                new Jugador("Copetti", 28, 9, "Delantero"));
+
         }
+
+
+
+
+
 
         // Inicia el menu principal
         public void IniciarMenu()
@@ -100,17 +124,15 @@ namespace TpJugadores.Controllers
 
                     case "7":
                         Console.Clear();
-                        MostrarTabla();
+                        EliminarEquipo();
                         break;
                     case "8":
                         VerJugadores();
                         break;
                     case "9":
-                        MostrarEstadisticas();
+                        EliminarJugador();
                         break;
-                    case "10":
-                        MostrarTop3();
-                        break;
+                   
 
                     case "0":
                         _view.MostrarMensaje("Hasta luego");
@@ -127,6 +149,14 @@ namespace TpJugadores.Controllers
 
             } while (opcion != "0");
         }
+
+
+
+
+
+
+
+
 
         // Agrega un equipo
         private void AgregarEquipo()
@@ -209,6 +239,15 @@ namespace TpJugadores.Controllers
 
             _view.MostrarMensaje($"El equipo '{nombre}' fue agregado correctamente");
         }
+
+
+
+
+
+
+
+
+
         // Lista los equipos
         private void ListarEquipos()
         {
@@ -245,6 +284,16 @@ namespace TpJugadores.Controllers
             _view.LetrasCentradas($" Total de equipos registrados: {_torneo.Equipos.Count}");
             _view.LetrasCentradas("----------------------------------------------------");
         }
+
+
+
+
+
+
+
+
+
+
 
         // Busca un equipo por nombre
         private void BuscarEquipo()
@@ -316,6 +365,15 @@ namespace TpJugadores.Controllers
             _view.LetrasCentradas("====================================================");
             Console.ResetColor();
         }
+
+
+
+
+
+
+
+
+
         // Agrega un jugador a un equipo
         private void AgregarJugador()
         {
@@ -372,101 +430,35 @@ namespace TpJugadores.Controllers
 
             Console.WriteLine();
 
-            string nombreJugador;
+            // Pedir Nombre del Jugador usando la Vista
+            string nombreJugador = _view.PedirNombreJugador();
 
-            while (true)
-            {
-                Console.Write("Nombre del jugador: ");
-                nombreJugador = Console.ReadLine();
+            //  Pedir Posición usando la Vista
+            string posicion = _view.PedirPosicion();
 
-                if (string.IsNullOrWhiteSpace(nombreJugador))
-                {
-                    _view.MostrarError("El nombre no puede estar vacio");
-                    continue;
-                }
-
-                if (nombreJugador.Any(char.IsDigit))
-                {
-                    _view.MostrarError("El nombre no puede contener numeros");
-                    continue;
-                }
-
-                break;
-            }
-            Console.WriteLine();
-            Console.WriteLine("[1] Arquero");
-            Console.WriteLine("[2] Defensor");
-            Console.WriteLine("[3] Mediocampista");
-            Console.WriteLine("[4] Delantero");
-
-            string posicion = "";
-
-            while (true)
-            {
-                Console.Write("Seleccione posicion: ");
-                string opcion = Console.ReadLine();
-
-                switch (opcion)
-                {
-                    case "1":
-                        posicion = "Arquero";
-                        break;
-
-                    case "2":
-                        posicion = "Defensor";
-                        break;
-
-                    case "3":
-                        posicion = "Mediocampista";
-                        break;
-
-                    case "4":
-                        posicion = "Delantero";
-                        break;
-
-                    default:
-                        _view.MostrarError("Opcion invalida");
-                        continue;
-                }
-
-                break;
-            }
             Console.WriteLine();
 
+           // Pedir Edad usando la Vista 
             int edad;
-
             while (true)
             {
-                Console.Write("Edad: ");
-
-                if (!int.TryParse(Console.ReadLine(), out edad))
-                {
-                    _view.MostrarError("Ingrese un numero valido");
-                    continue;
-                }
+                edad = _view.PedirEdad();
 
                 if (edad < 15 || edad > 50)
                 {
                     _view.MostrarError("La edad debe estar entre 15 y 50");
                     continue;
                 }
-
                 break;
             }
 
             Console.WriteLine();
 
+            // Pedir Número usando la Vista
             int numero;
-
             while (true)
             {
-                Console.Write("Numero de camiseta: ");
-
-                if (!int.TryParse(Console.ReadLine(), out numero))
-                {
-                    _view.MostrarError("Ingrese un numero valido");
-                    continue;
-                }
+                numero = _view.PedirNumero();
 
                 if (numero < 1 || numero > 99)
                 {
@@ -479,10 +471,10 @@ namespace TpJugadores.Controllers
                     _view.MostrarError("Ese numero ya esta ocupado");
                     continue;
                 }
-
                 break;
             }
 
+            // Validación de jugador repetido por nombre
             if (equipoSeleccionado.Jugadores.Any(j =>
                 j.Nombre.ToLower() == nombreJugador.ToLower()))
             {
@@ -490,6 +482,7 @@ namespace TpJugadores.Controllers
                 return;
             }
 
+            // Se crea el objeto
             Jugador nuevoJugador = new Jugador(
                 nombreJugador,
                 edad,
@@ -497,8 +490,10 @@ namespace TpJugadores.Controllers
                 posicion
             );
 
+            // Se agrega al equipo
             equipoSeleccionado.AgregarJugador(nuevoJugador);
 
+            // Mensaje de éxito en la pantalla
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine();
             _view.LetrasCentradas("========================================");
@@ -510,63 +505,178 @@ namespace TpJugadores.Controllers
             _view.LetrasCentradas("========================================");
             Console.ResetColor();
         }
+
+
+
+
+
+
+
+
+
+
         // Muestra el equipo con mas puntos
         private void MostrarCampeon()
         {
+            Console.Clear();
+
             Equipo campeon = _torneo.ObtenerCampeon();
 
             if (campeon == null)
             {
-                _view.MostrarError("No hay equipos");
+                _view.MostrarError("No hay equipos cargados");
                 return;
             }
 
-            _view.MostrarMensaje(
-                $"Campeon actual: {campeon.Nombre}"
-            );
+            Console.ForegroundColor = ConsoleColor.Yellow;
+
+            _view.LetrasCentradas("       ___________      ");
+            _view.LetrasCentradas("      '._==_==_=_.'     ");
+            _view.LetrasCentradas("      .-\\:      /-.    ");
+            _view.LetrasCentradas("     | (|:.     |) |    ");
+            _view.LetrasCentradas("      '-|:.     |-'     ");
+            _view.LetrasCentradas("        \\::.    /      ");
+            _view.LetrasCentradas("         '::. .'        ");
+            _view.LetrasCentradas("           ) (          ");
+            _view.LetrasCentradas("         _.' '._        ");
+            _view.LetrasCentradas("       `\"\"\"\"\"\"\"`        ");
+
+            Console.WriteLine();
+
+            _view.LetrasCentradas("====================================================");
+            _view.LetrasCentradas("                 CAMPEON ACTUAL                      ");
+            _view.LetrasCentradas("====================================================");
+
+            Console.ResetColor();
+
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Green;
+
+            _view.LetrasCentradas($"EQUIPO: {campeon.Nombre.ToUpper()}");
+            _view.LetrasCentradas($"PUNTOS: {campeon.CalcularPuntos()}");
+
+            Console.WriteLine();
+
+            _view.LetrasCentradas($"VICTORIAS: {campeon.Victorias}");
+            _view.LetrasCentradas($"EMPATES: {campeon.Empates}");
+            _view.LetrasCentradas($"DERROTAS: {campeon.Derrotas}");
+
+            Console.ResetColor();
+
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            _view.LetrasCentradas("LIDER DEL TORNEO APERTURA 2026");
+            Console.ResetColor();
         }
 
-        // Muestra todos los equipos y sus puntos
-        private void MostrarTabla()
+
+
+
+
+
+
+
+
+        // elimnar un equipo del torneo
+        private void EliminarEquipo()
         {
+            Console.Clear();
+
+            Console.ForegroundColor = ConsoleColor.Red;
+
+            _view.LetrasCentradas("====================================================");
+            _view.LetrasCentradas("                ELIMINAR EQUIPO                     ");
+            _view.LetrasCentradas("====================================================");
+
+            Console.ResetColor();
+
             Console.WriteLine();
-            Console.WriteLine("====================================");
-            Console.WriteLine("      TABLA DE POSICIONES");
-            Console.WriteLine("====================================");
-            Console.WriteLine("POS   EQUIPO           PTS");
-            Console.WriteLine("------------------------------------");
 
-            int posicion = 1;
-
-            foreach (Equipo equipo in _torneo.Equipos
-                .OrderByDescending(e => e.CalcularPuntos()))
+            foreach (Equipo equipo in _torneo.Equipos)
             {
-                Console.WriteLine(
-                    $"{posicion,-5}{equipo.Nombre,-15}{equipo.CalcularPuntos()}");
-
-                posicion++;
+                _view.LetrasCentradas("- " + equipo.Nombre);
             }
 
-            Console.WriteLine("====================================");
+            Console.WriteLine();
+
+            string nombre = _view.PedirNombreEquipo();
+
+            Equipo equipoEliminar = _torneo.BuscarEquipo(nombre);
+
+            if (equipoEliminar == null)
+            {
+                _view.MostrarError("Equipo no encontrado");
+                return;
+            }
+
+            _torneo.EliminarEquipo(equipoEliminar);
+
+            _view.MostrarMensaje(
+                $"El equipo {equipoEliminar.Nombre} fue eliminado correctamente");
         }
-        // Registra un partido entre dos equipos
+
+
+
+
+
+
+
+
+
+
         private void RegistrarPartido()
         {
-            Console.WriteLine("=== REGISTRAR PARTIDO ===");
+            Console.Clear();
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+
+            _view.LetrasCentradas("====================================================");
+            _view.LetrasCentradas("               REGISTRAR PARTIDO");
+            _view.LetrasCentradas("====================================================");
+
+            Console.ResetColor();
+
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            _view.LetrasCentradas("EQUIPOS DISPONIBLES");
+            Console.ResetColor();
+
+            Console.WriteLine();
+
+            foreach (Equipo equipo in _torneo.Equipos)
+            {
+                _view.LetrasCentradas("- " + equipo.Nombre);
+            }
+
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            _view.LetrasCentradas("ESCRIBA 0 PARA VOLVER AL MENU");
+            Console.ResetColor();
+
+            Console.WriteLine();
 
             Console.Write("Equipo local: ");
             string nombreLocal = Console.ReadLine();
 
+            if (nombreLocal == "0")
+                return;
+
             Console.Write("Equipo visitante: ");
             string nombreVisitante = Console.ReadLine();
 
-            if (nombreLocal.ToLower() ==
-             nombreVisitante.ToLower())
+            if (nombreVisitante == "0")
+                return;
+
+            if (nombreLocal.ToLower() == nombreVisitante.ToLower())
             {
-                _view.MostrarError(
-                    "Un equipo no puede jugar contra si mismo");
+                _view.MostrarError("Un equipo no puede jugar contra si mismo");
                 return;
             }
+
             Equipo local = _torneo.BuscarEquipo(nombreLocal);
             Equipo visitante = _torneo.BuscarEquipo(nombreVisitante);
 
@@ -575,6 +685,8 @@ namespace TpJugadores.Controllers
                 _view.MostrarError("Uno o ambos equipos no existen");
                 return;
             }
+
+            Console.WriteLine();
 
             int golesLocal = _view.PedirGolesLocal();
             int golesVisitante = _view.PedirGolesVisitante();
@@ -592,90 +704,202 @@ namespace TpJugadores.Controllers
 
             _torneo.AgregarPartido(partido);
 
-            _view.MostrarMensaje(
-                "Partido registrado correctamente"
-            );
-        }
-        private void MostrarTop3()
-        {
-            var top = _torneo.Equipos
-                .OrderByDescending(e => e.CalcularPuntos())
-                .Take(3)
-                .ToList();
+            Console.ForegroundColor = ConsoleColor.Green;
 
             Console.WriteLine();
-            Console.WriteLine("===== TOP 3 DEL TORNEO =====");
+            _view.LetrasCentradas("PARTIDO REGISTRADO CORRECTAMENTE");
+            _view.LetrasCentradas($"{local.Nombre} {golesLocal} - {golesVisitante} {visitante.Nombre}");
+
             Console.WriteLine();
 
-            if (top.Count > 0)
-                Console.WriteLine($"1° {top[0].Nombre} - {top[0].CalcularPuntos()} pts");
+            if (golesLocal > golesVisitante)
+            {
+                _view.LetrasCentradas($"{local.Nombre} SUMO 3 PUNTOS");
+                _view.LetrasCentradas($"{visitante.Nombre} SUMO 0 PUNTOS");
+            }
+            else if (golesLocal < golesVisitante)
+            {
+                _view.LetrasCentradas($"{visitante.Nombre} SUMO 3 PUNTOS");
+                _view.LetrasCentradas($"{local.Nombre} SUMO 0 PUNTOS");
+            }
+            else
+            {
+                _view.LetrasCentradas($"{local.Nombre} SUMO 1 PUNTO");
+                _view.LetrasCentradas($"{visitante.Nombre} SUMO 1 PUNTO");
+            }
 
-            if (top.Count > 1)
-                Console.WriteLine($"2° {top[1].Nombre} - {top[1].CalcularPuntos()} pts");
+            Console.ResetColor();
 
-            if (top.Count > 2)
-                Console.WriteLine($"3° {top[2].Nombre} - {top[2].CalcularPuntos()} pts");
+            Console.ForegroundColor = ConsoleColor.Green;
+
+           
+            Console.ResetColor();
         }
-        private void MostrarEstadisticas()
+
+
+
+
+
+
+
+        
+        private void EliminarJugador()
         {
-            string nombre = _view.PedirNombreEquipo();
+            Console.Clear();
 
-            Equipo equipo = _torneo.BuscarEquipo(nombre);
+            Console.ForegroundColor = ConsoleColor.Red;
 
-            if (equipo == null)
+            _view.LetrasCentradas("====================================================");
+            _view.LetrasCentradas("               ELIMINAR JUGADOR                     ");
+            _view.LetrasCentradas("====================================================");
+
+            Console.ResetColor();
+
+            Console.WriteLine();
+
+            foreach (Equipo equipo in _torneo.Equipos)
+            {
+                _view.LetrasCentradas("- " + equipo.Nombre);
+            }
+
+            Console.WriteLine();
+
+            string nombreEquipo = _view.PedirNombreEquipo();
+
+            Equipo equipoSeleccionado = _torneo.BuscarEquipo(nombreEquipo);
+
+            if (equipoSeleccionado == null)
             {
                 _view.MostrarError("Equipo no encontrado");
                 return;
             }
 
             Console.WriteLine();
-            Console.WriteLine("=================================");
-            Console.WriteLine($"ESTADISTICAS DE {equipo.Nombre.ToUpper()}");
-            Console.WriteLine("=================================");
 
-            Console.WriteLine($"Victorias : {equipo.Victorias}");
-            Console.WriteLine($"Empates   : {equipo.Empates}");
-            Console.WriteLine($"Derrotas  : {equipo.Derrotas}");
+            if (equipoSeleccionado.Jugadores.Count == 0)
+            {
+                _view.MostrarError("Ese equipo no tiene jugadores");
+                return;
+            }
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            _view.LetrasCentradas("JUGADORES DISPONIBLES");
+            Console.ResetColor();
 
             Console.WriteLine();
 
-            Console.WriteLine($"Puntos    : {equipo.CalcularPuntos()}");
+            foreach (Jugador jugador in equipoSeleccionado.Jugadores)
+            {
+                _view.LetrasCentradas(
+                    $"{jugador.Nombre} - #{jugador.Numero}");
+            }
 
             Console.WriteLine();
 
-            Console.WriteLine($"% Victorias : {equipo.PorcentajeVictorias():F2}%");
-            Console.WriteLine($"% Empates   : {equipo.PorcentajeEmpates():F2}%");
-            Console.WriteLine($"% Derrotas  : {equipo.PorcentajeDerrotas():F2}%");
+            Console.Write("Nombre del jugador a eliminar: ");
+            string nombreJugador = Console.ReadLine();
 
-            Console.WriteLine("=================================");
+            Jugador jugadorEliminar =
+                equipoSeleccionado.Jugadores.FirstOrDefault(j =>
+                j.Nombre.ToLower() == nombreJugador.ToLower());
+
+            if (jugadorEliminar == null)
+            {
+                _view.MostrarError("Jugador no encontrado");
+                return;
+            }
+
+            
+            equipoSeleccionado.EliminarJugador(nombreJugador);
+
+            _view.MostrarMensaje(
+                $"Jugador {jugadorEliminar.Nombre} eliminado correctamente");
+        
         }
+
+
+
+
+
+
+    
         private void VerJugadores()
         {
+            Console.Clear();
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+
+            _view.LetrasCentradas("====================================================");
+            _view.LetrasCentradas("              CONSULTA DE JUGADORES                 ");
+            _view.LetrasCentradas("====================================================");
+
+            Console.ResetColor();
+
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            _view.LetrasCentradas("EQUIPOS DISPONIBLES");
+            Console.ResetColor();
+
+            Console.WriteLine();
+
+            foreach (Equipo equipo in _torneo.Equipos)
+            {
+                _view.LetrasCentradas("- " + equipo.Nombre);
+            }
+
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            _view.LetrasCentradas("INGRESE EL NOMBRE DEL EQUIPO");
+            Console.ResetColor();
+
+            Console.WriteLine();
+
             string nombre = _view.PedirNombreEquipo();
 
-            Equipo equipo = _torneo.BuscarEquipo(nombre);
+            Equipo equipoSeleccionado = _torneo.BuscarEquipo(nombre);
 
-            if (equipo == null)
+            if (equipoSeleccionado == null)
             {
                 _view.MostrarError("Equipo no encontrado");
                 return;
             }
 
-            Console.WriteLine();
-            Console.WriteLine("=================================");
-            Console.WriteLine($"JUGADORES DE {equipo.Nombre}");
-            Console.WriteLine("=================================");
+            Console.Clear();
 
-            if (equipo.Jugadores.Count == 0)
+            Console.ForegroundColor = ConsoleColor.Yellow;
+
+            _view.LetrasCentradas("====================================================");
+            _view.LetrasCentradas($"PLANTEL DE {equipoSeleccionado.Nombre.ToUpper()}   ");
+            _view.LetrasCentradas("====================================================");
+
+            Console.ResetColor();
+
+            Console.WriteLine();
+
+            if (equipoSeleccionado.Jugadores.Count == 0)
             {
-                Console.WriteLine("No hay jugadores cargados");
+                _view.MostrarError("No hay jugadores cargados");
                 return;
             }
 
-            foreach (Jugador jugador in equipo.Jugadores)
+            Console.WriteLine("----------------------------------------------------");
+            Console.WriteLine(" N°   JUGADOR                POSICION      CAMISETA" );
+            Console.WriteLine("----------------------------------------------------");
+
+            int contador = 1;
+
+            foreach (Jugador jugador in equipoSeleccionado.Jugadores)
             {
-                Console.WriteLine(jugador.ObtenerInfo());
+                Console.WriteLine(
+                    $" {contador,-4} {jugador.Nombre,-20} {jugador.Posicion,-12} #{jugador.Numero}");
+                contador++;
             }
+
+            Console.WriteLine("----------------------------------------------------");
+            Console.WriteLine($" Total de jugadores: {equipoSeleccionado.Jugadores.Count}");
+            Console.WriteLine("----------------------------------------------------");
         }
 
     }
