@@ -9,8 +9,7 @@ namespace TpJugadores.Models
     // Clase que representa un partido
     public class Partido
     {
-        // Fecha del partido
-        public DateTime Fecha { get; set; }
+        
 
         // Equipo que juega de local
         public Equipo EquipoLocal { get; set; }
@@ -25,9 +24,9 @@ namespace TpJugadores.Models
         public int GolesVisitante { get; set; }
 
         // Constructor
-        public Partido(DateTime fecha, Equipo local, Equipo visitante)
+        public Partido( Equipo local, Equipo visitante)
         {
-            Fecha = fecha;
+            
             EquipoLocal = local;
             EquipoVisitante = visitante;
 

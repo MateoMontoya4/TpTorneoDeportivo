@@ -140,10 +140,33 @@ namespace TpJugadores.Views
         }
 
 
+        // Espera una tecla para continuar
+        public void Pausa()
+        {
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+
+            Console.WriteLine("Presione una tecla para continuar...");
+
+            Console.ResetColor();
+
+            Console.ReadKey();
+        }
 
 
 
-        // Pide nombre de equipo
+
+        //esto es para q las letras esten centradas y no todo al costado
+        public void LetrasCentradas(string texto)
+        {
+            int espacios = (Console.WindowWidth - texto.Length) / 2;
+
+            if (espacios < 0)
+                espacios = 0;
+
+            Console.WriteLine(new string(' ', espacios) + texto);
+        }
         public string PedirNombreEquipo()
         {
             string nombre;
@@ -168,10 +191,6 @@ namespace TpJugadores.Views
                 return nombre;
             }
         }
-
-
-
-
         // Pide nombre del jugador
         public string PedirNombreJugador()
         {
@@ -240,9 +259,9 @@ namespace TpJugadores.Views
                         return "Arquero";
 
                     case "2":
-                       
+
                         return "Defensor";
-                        
+
 
                     case "3":
                         return "Mediocampista";
@@ -275,10 +294,6 @@ namespace TpJugadores.Views
 
             return numero;
         }
-
-
-
-
 
         // Pide los goles del equipo local
         public int PedirGolesLocal()
@@ -314,37 +329,5 @@ namespace TpJugadores.Views
 
             return goles;
         }
-
-
-
-
-        // Espera una tecla para continuar
-        public void Pausa()
-        {
-            Console.WriteLine();
-
-            Console.ForegroundColor = ConsoleColor.DarkGray;
-
-            Console.WriteLine("Presione una tecla para continuar...");
-
-            Console.ResetColor();
-
-            Console.ReadKey();
-        }
-
-
-
-
-        //esto es para q las letras esten centradas y no todo al costado
-        public void LetrasCentradas(string texto)
-        {
-            int espacios = (Console.WindowWidth - texto.Length) / 2;
-
-            if (espacios < 0)
-                espacios = 0;
-
-            Console.WriteLine(new string(' ', espacios) + texto);
-        }
-
     }
 }
