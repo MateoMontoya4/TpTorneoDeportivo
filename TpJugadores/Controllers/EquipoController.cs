@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TpJugadores.Models;
+using TpJugadores.Repository;
 using TpJugadores.Views;
 
 namespace TpJugadores.Controllers
@@ -12,11 +13,13 @@ namespace TpJugadores.Controllers
     {
         private Torneo _torneo;
         private TorneoView _view;
+        private IRepository<Equipo> _repo;
 
-        public EquipoController(Torneo torneo)
+        public EquipoController(Torneo torneo, IRepository<Equipo> repo)
         {
             _torneo = torneo;
             _view = new TorneoView();
+            _repo = repo;
         }
 
         // Agrega un equipo
@@ -97,7 +100,11 @@ namespace TpJugadores.Controllers
             _torneo.AgregarEquipo(nuevoEquipo);
 
             _view.MostrarMensaje($"El equipo '{nombre}' fue agregado correctamente");
+
+            _torneo.AgregarEquipo(nuevoEquipo);
+            _repo.GuardarTodos(_torneo.Equipos);
         }
+        
         public void ListarEquipos()
         {
             Console.Clear();
@@ -303,6 +310,9 @@ namespace TpJugadores.Controllers
 
             _view.MostrarMensaje(
                 $"El equipo {equipoEliminar.Nombre} fue eliminado correctamente");
+            
+            _torneo.EliminarEquipo(equipoEliminar);
+            _repo.GuardarTodos(_torneo.Equipos);
         }
     }
 }

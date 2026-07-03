@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TpJugadores.Models;
 using TpJugadores.Views;
+using TpJugadores.Repository;
 
 namespace TpJugadores.Controllers
 {
@@ -12,12 +13,13 @@ namespace TpJugadores.Controllers
     {
         private Torneo _torneo;
         private TorneoView _view;
-        
+        private IRepository<Jugador> _repo;
 
-        public JugadorController(Torneo torneo)
+        public JugadorController(Torneo torneo, IRepository<Jugador> repo)
         {
             _torneo = torneo;
             _view = new TorneoView();
+            _repo = repo;
         }
         // Agrega un jugador a un equipo
         public void AgregarJugador()
@@ -134,9 +136,16 @@ namespace TpJugadores.Controllers
                 numero,
                 posicion
             );
-
+            nuevoJugador.EquipoNombre = equipoSeleccionado.Nombre;
             // Se agrega al equipo
             equipoSeleccionado.AgregarJugador(nuevoJugador);
+
+            //  GUARDAR EN JSON
+            _repo.GuardarTodos(
+                _torneo.Equipos.SelectMany(e => e.Jugadores).ToList()
+            );
+
+           
 
             // Mensaje de éxito en la pantalla
             Console.ForegroundColor = ConsoleColor.Green;

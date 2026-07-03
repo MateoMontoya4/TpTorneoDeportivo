@@ -1,5 +1,6 @@
 ﻿using TpJugadores.Models;
 using TpJugadores.Views;
+using TpJugadores.Repository;
 
 namespace TpJugadores.Controllers
 {
@@ -8,23 +9,58 @@ namespace TpJugadores.Controllers
         private Torneo _torneo;
         private TorneoView _view;
 
+        private IRepository<Equipo> _repoEquipos;
+        private IRepository<Jugador> _repoJugadores;
+
         private EquipoController _equipoController;
         private JugadorController _jugadorController;
         private PartidoController _partidoController;
 
-        public TorneoController()
+        public TorneoController(IRepository<Equipo> repoEquipos, IRepository<Jugador> repoJugadores)
         {
+            _repoEquipos = repoEquipos;
+            _repoJugadores = repoJugadores;
+
             _torneo = new Torneo("Torneo Apertura");
 
             _view = new TorneoView();
 
-            _equipoController = new EquipoController(_torneo);
-            _jugadorController = new JugadorController(_torneo);
+            _equipoController = new EquipoController(_torneo, _repoEquipos);
+            _jugadorController = new JugadorController(_torneo, _repoJugadores);
             _partidoController = new PartidoController(_torneo);
 
             _view.MostrarBienvenida();
 
-            CargarDatosIniciales();
+
+            CargarEquipos();     // 👈 PRIMERO
+            CargarJugadores();   // 👈 DESPUÉS
+
+        }
+        private void CargarEquipos()
+        {
+            var equipos = _repoEquipos.LeerTodos();
+
+            if (equipos != null && equipos.Count > 0)
+            {
+                foreach (var e in equipos)
+                {
+                    _torneo.AgregarEquipo(e);
+                }
+            }
+        }
+        private void CargarJugadores()
+        {
+            var jugadores = _repoJugadores.LeerTodos();
+
+            foreach (var j in jugadores)
+            {
+                var equipo = _torneo.BuscarEquipo(j.EquipoNombre);
+
+                if (equipo != null)
+                {
+                    equipo.AgregarJugador(j);
+                }
+            }
         }
 
         private void CargarDatosIniciales()
@@ -48,32 +84,18 @@ namespace TpJugadores.Controllers
             _torneo.AgregarEquipo(boca);
             _torneo.AgregarEquipo(racing);
 
-            river.AgregarJugador(
-                new Jugador("Armani", 38, 1, "Arquero"));
+            // 🔥 AHORA recién cargás jugadores
+            var jugadores = _repoJugadores.LeerTodos();
 
-            river.AgregarJugador(
-                new Jugador("Pezzella", 33, 6, "Defensor"));
+            foreach (var j in jugadores)
+            {
+                var equipo = _torneo.BuscarEquipo(j.EquipoNombre);
 
-            river.AgregarJugador(
-                new Jugador("Colidio", 25, 11, "Delantero"));
-
-            boca.AgregarJugador(
-                new Jugador("Andrada", 35, 1, "Arquero"));
-
-            boca.AgregarJugador(
-                new Jugador("Izquierdoz", 36, 2, "Defensor"));
-
-            boca.AgregarJugador(
-                new Jugador("Vazquez", 30, 9, "Delantero"));
-
-            racing.AgregarJugador(
-                new Jugador("Martiz", 37, 1, "Arquero"));
-
-            racing.AgregarJugador(
-                new Jugador("Sigali", 34, 2, "Defensor"));
-
-            racing.AgregarJugador(
-                new Jugador("Copetti", 28, 9, "Delantero"));
+                if (equipo != null)
+                {
+                    equipo.AgregarJugador(j);
+                }
+            }
         }
 
         public void IniciarMenu()

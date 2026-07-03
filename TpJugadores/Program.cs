@@ -1,4 +1,6 @@
 ﻿using TpJugadores.Controllers;
+using TpJugadores.Models;
+using TpJugadores.Repository;
 
 namespace TpJugadores
 {
@@ -6,11 +8,15 @@ namespace TpJugadores
     {
         static void Main(string[] args)
         {
-            // Crea el controlador principal
-            TorneoController controller =
-                new TorneoController();
+            IRepository<Equipo> repoEquipos =
+               new JsonRepository<Equipo>("equipos.json");
 
-            // Inicia el menu
+            IRepository<Jugador> repoJugadores =
+                new JsonRepository<Jugador>("jugadores.json");
+
+            TorneoController controller =
+                new TorneoController(repoEquipos, repoJugadores);
+
             controller.IniciarMenu();
         }
     }

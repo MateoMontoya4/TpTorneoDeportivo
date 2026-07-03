@@ -48,6 +48,9 @@ namespace TpJugadores.Models
         // Busca un equipo por nombre
         public Equipo BuscarEquipo(string nombre)
         {
+            if (string.IsNullOrWhiteSpace(nombre))
+                return null;
+
             return Equipos.FirstOrDefault(
                 e => e.Nombre.ToLower() == nombre.ToLower()
             );

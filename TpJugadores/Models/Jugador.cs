@@ -14,7 +14,9 @@ namespace TpJugadores.Models
         // posicion dentro de la cancha
         public string Posicion { get; set; }
 
-        
+       public string EquipoNombre { get; set; }   
+
+
 
         // El constructor pide los datos y con el base se los manda a la clase Persona
         public Jugador(string nombre, int edad, int numero, string posicion) : base(nombre, edad)
