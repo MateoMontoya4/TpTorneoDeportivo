@@ -285,24 +285,22 @@ namespace TpJugadores.Controllers
             Console.ForegroundColor = ConsoleColor.Red;
 
             _view.LetrasCentradas("====================================================");
-            _view.LetrasCentradas("                ELIMINAR EQUIPO                     ");
+            _view.LetrasCentradas("                ELIMINAR EQUIPO");
             _view.LetrasCentradas("====================================================");
 
             Console.ResetColor();
 
             Console.WriteLine();
 
+            // Mostrar todos los equipos con su ID
             foreach (Equipo equipo in _torneo.Equipos)
             {
-                foreach (Jugador jugador in equipo.Jugadores)
-                {
-                    _view.LetrasCentradas(
-                        $"ID: {jugador.id} - {jugador.Nombre} ({equipo.Nombre})"
-                    );
-                }
+                _view.LetrasCentradas($"ID: {equipo.id} - {equipo.Nombre}");
             }
 
-            Console.Write("Ingrese ID del jugador a eliminar: ");
+            Console.WriteLine();
+
+            Console.Write("Ingrese ID del equipo a eliminar: ");
 
             if (!int.TryParse(Console.ReadLine(), out int id))
             {
@@ -310,34 +308,27 @@ namespace TpJugadores.Controllers
                 return;
             }
 
-            // buscar jugador
-            Jugador jugadorEliminar = null;
-            Equipo equipoPadre = null;
+            // Buscar el equipo por ID
+            Equipo equipoEliminar = _repo.BuscarPorId(id);
 
-            foreach (var equipo in _torneo.Equipos)
+            if (equipoEliminar == null)
             {
-                jugadorEliminar = equipo.Jugadores.FirstOrDefault(j => j.id == id);
-
-                if (jugadorEliminar != null)
-                {
-                    equipoPadre = equipo;
-                    break;
-                }
-            }
-
-            if (jugadorEliminar == null)
-            {
-                _view.MostrarError("Jugador no encontrado");
+                _view.MostrarError("Equipo no encontrado");
                 return;
             }
 
-            // eliminar de memoria
-            equipoPadre.Jugadores.Remove(jugadorEliminar);
+            // Eliminar de la lista en memoria
+            _torneo.EliminarEquipo(
+                _torneo.Equipos.FirstOrDefault(e => e.id == id)
+            );
 
-            // 🔥 eliminar del repo (CORRECTO)
-            _repo.Eliminar(jugadorEliminar.id);
+            // Eliminar del archivo JSON
+            _repo.Eliminar(id);
 
-            _view.MostrarMensaje("Jugador eliminado correctamente");
+            // Sincronizar la memoria con el JSON
+            _torneo.Equipos = _repo.LeerTodos();
+
+            _view.MostrarMensaje($"Equipo '{equipoEliminar.Nombre}' eliminado correctamente");
         }
 
         public void ActualizarEquipo()

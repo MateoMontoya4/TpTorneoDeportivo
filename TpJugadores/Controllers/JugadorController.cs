@@ -231,6 +231,111 @@ namespace TpJugadores.Controllers
         }
 
 
+        public void ActualizarJugador()
+        {
+            Console.Clear();
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+
+            _view.LetrasCentradas("====================================================");
+            _view.LetrasCentradas("              ACTUALIZAR JUGADOR");
+            _view.LetrasCentradas("====================================================");
+
+            Console.ResetColor();
+
+            Console.WriteLine();
+
+            // Mostrar todos los jugadores con su ID
+            foreach (Equipo equipo in _torneo.Equipos)
+            {
+                foreach (Jugador jugador in equipo.Jugadores)
+                {
+                    _view.LetrasCentradas(
+                        $"ID: {jugador.id} - {jugador.Nombre} ({equipo.Nombre})"
+                    );
+                }
+            }
+
+            Console.WriteLine();
+
+            Console.Write("Ingrese el ID del jugador: ");
+
+            if (!int.TryParse(Console.ReadLine(), out int id))
+            {
+                _view.MostrarError("ID inválido");
+                return;
+            }
+
+            // Buscar el jugador por su ID en el archivo JSON.
+            Jugador jugadorEdit = _repo.BuscarPorId(id);
+
+            if (jugadorEdit == null)
+            {
+                _view.MostrarError("Jugador no encontrado");
+                return;
+            }
+
+            Console.WriteLine();
+
+            // Pedir nuevo nombre
+            Console.Write("Nuevo nombre: ");
+            string nuevoNombre = Console.ReadLine();
+
+            if (!string.IsNullOrWhiteSpace(nuevoNombre))
+            {
+                jugadorEdit.Nombre = nuevoNombre;
+            }
+
+            Console.WriteLine();
+
+            // Pedir nueva posición usando el mismo menú que AgregarJugador
+            string nuevaPosicion = _view.PedirPosicion();
+            jugadorEdit.Posicion = nuevaPosicion;
+
+            Console.WriteLine();
+
+            // Pedir nuevo número de camiseta
+            int nuevoNumero = _view.PedirNumero();
+
+            // Verificar que el número no esté repetido dentro del mismo equipo
+            Equipo equipoJugador = _torneo.BuscarEquipo(jugadorEdit.EquipoNombre);
+
+            if (equipoJugador != null)
+            {
+                if (equipoJugador.Jugadores.Any(j =>
+                    j.id != jugadorEdit.id &&
+                    j.Numero == nuevoNumero))
+                {
+                    _view.MostrarError("Ese numero de camiseta ya esta ocupado");
+                    return;
+                }
+            }
+
+            jugadorEdit.Numero = nuevoNumero;
+
+            // Guardar los cambios en el JSON
+            _repo.Actualizar(jugadorEdit);
+
+            // Recargar los jugadores para reflejar los cambios inmediatamente
+            foreach (Equipo equipo in _torneo.Equipos)
+            {
+                equipo.Jugadores.Clear();
+            }
+
+            foreach (Jugador jugador in _repo.LeerTodos())
+            {
+                Equipo equipo = _torneo.BuscarEquipo(jugador.EquipoNombre);
+
+                if (equipo != null)
+                {
+                    equipo.AgregarJugador(jugador);
+                }
+            }
+
+            _view.MostrarMensaje("Jugador actualizado correctamente");
+        }
+
+
         public void VerJugadores()
         {
             Console.Clear();

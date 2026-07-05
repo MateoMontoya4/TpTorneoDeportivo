@@ -95,6 +95,7 @@ namespace TpJugadores.Views
             LetrasCentradas("[8]  VER JUGADORES");
             LetrasCentradas("[9]  ELIMINAR JUGADOR DEL TORNEO");
             LetrasCentradas("[10]  ACTUALIZAR EQUIPO");
+            LetrasCentradas("[11]  ACTUALIZAR JUGADOR");
             LetrasCentradas("[0]  SALIR");
             Console.ResetColor();
 

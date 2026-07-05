@@ -27,7 +27,7 @@ namespace TpJugadores.Controllers
 
             _equipoController = new EquipoController(_torneo, _repoEquipos);
             _jugadorController = new JugadorController(_torneo, _repoJugadores);
-            _partidoController = new PartidoController(_torneo);
+            _partidoController = new PartidoController(_torneo, _repoEquipos);
 
             _view.MostrarBienvenida();
 
@@ -75,40 +75,7 @@ namespace TpJugadores.Controllers
             }
         }
 
-        private void CargarDatosIniciales()
-        {
-            Equipo river = new Equipo("River");
-            river.Victorias = 8;
-            river.Empates = 2;
-            river.Derrotas = 1;
-
-            Equipo boca = new Equipo("Boca");
-            boca.Victorias = 7;
-            boca.Empates = 1;
-            boca.Derrotas = 3;
-
-            Equipo racing = new Equipo("Racing");
-            racing.Victorias = 5;
-            racing.Empates = 4;
-            racing.Derrotas = 2;
-
-            _torneo.AgregarEquipo(river);
-            _torneo.AgregarEquipo(boca);
-            _torneo.AgregarEquipo(racing);
-
-            // 🔥 AHORA recién cargás jugadores
-            var jugadores = _repoJugadores.LeerTodos();
-
-            foreach (var j in jugadores)
-            {
-                var equipo = _torneo.BuscarEquipo(j.EquipoNombre);
-
-                if (equipo != null)
-                {
-                    equipo.AgregarJugador(j);
-                }
-            }
-        }
+        
 
         public void IniciarMenu()
         {
@@ -167,6 +134,10 @@ namespace TpJugadores.Controllers
                     case "10":
                         Console.Clear();
                         _equipoController.ActualizarEquipo();
+                        break; 
+                    case "11":
+                        Console.Clear();
+                        _jugadorController.ActualizarJugador();
                         break;
 
                     case "0":

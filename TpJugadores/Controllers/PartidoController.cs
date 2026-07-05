@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TpJugadores.Models;
+using TpJugadores.Repository;
 using TpJugadores.Views;
 
 namespace TpJugadores.Controllers
@@ -12,11 +13,13 @@ namespace TpJugadores.Controllers
     {
         private Torneo _torneo;
         private TorneoView _view;
+        private IRepository<Equipo> _repo;
 
-        public PartidoController(Torneo torneo)
+        public PartidoController(Torneo torneo, IRepository<Equipo> repo)
         {
             _torneo = torneo;
             _view = new TorneoView();
+            _repo = repo;
         }
         public void RegistrarPartido()
         {
@@ -52,13 +55,13 @@ namespace TpJugadores.Controllers
             Console.WriteLine();
 
             Console.Write("Equipo local: ");
-            string nombreLocal = Console.ReadLine();
+            string nombreLocal = Console.ReadLine().Trim();
 
             if (nombreLocal == "0")
                 return;
 
             Console.Write("Equipo visitante: ");
-            string nombreVisitante = Console.ReadLine();
+            string nombreVisitante = Console.ReadLine().Trim();
 
             if (nombreVisitante == "0")
                 return;
@@ -94,6 +97,9 @@ namespace TpJugadores.Controllers
             );
 
             _torneo.AgregarPartido(partido);
+
+            // Guarda las estadísticas actualizadas de los equipos en el JSON.
+            _repo.GuardarTodos(_torneo.Equipos);
 
             Console.ForegroundColor = ConsoleColor.Green;
 
