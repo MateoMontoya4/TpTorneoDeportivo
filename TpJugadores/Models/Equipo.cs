@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 namespace TpJugadores.Models
 {
     //La clase Equipo implementa la interfaz IPuntuable para calcular sus puntos
-    public class Equipo : IPuntuable
+    public class Equipo : IPuntuable, IEntidad
     {
+        public int id { get; set; }
+
+
         // Nombre del equipo
         public string Nombre { get; set; }
 

@@ -31,11 +31,15 @@ namespace TpJugadores.Controllers
 
             _view.MostrarBienvenida();
 
-
+            // Primero se cargan los equipos.
+            // Después se cargan los jugadores porque necesitan que el equipo ya exista.
             CargarEquipos();     // 👈 PRIMERO
             CargarJugadores();   // 👈 DESPUÉS
 
         }
+
+        // Carga todos los equipos guardados en el archivo JSON
+        // y los agrega nuevamente al torneo al iniciar el programa.
         private void CargarEquipos()
         {
             var equipos = _repoEquipos.LeerTodos();
@@ -48,8 +52,15 @@ namespace TpJugadores.Controllers
                 }
             }
         }
+
+
+        // Carga los jugadores guardados en el JSON.
+        // Busca el equipo al que pertenece cada jugador y lo agrega
+        // a la lista de jugadores de ese equipo.
         private void CargarJugadores()
         {
+
+            // Busca el equipo usando el nombre que quedó guardado en el jugador.
             var jugadores = _repoJugadores.LeerTodos();
 
             foreach (var j in jugadores)
@@ -58,6 +69,7 @@ namespace TpJugadores.Controllers
 
                 if (equipo != null)
                 {
+                    // Agrega nuevamente el jugador a su equipo correspondiente.
                     equipo.AgregarJugador(j);
                 }
             }
@@ -151,6 +163,10 @@ namespace TpJugadores.Controllers
                     case "9":
                         Console.Clear();
                         _jugadorController.EliminarJugador();
+                        break;
+                    case "10":
+                        Console.Clear();
+                        _equipoController.ActualizarEquipo();
                         break;
 
                     case "0":

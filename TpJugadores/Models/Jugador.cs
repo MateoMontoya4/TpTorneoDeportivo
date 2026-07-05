@@ -7,14 +7,25 @@ using System.Threading.Tasks;
 namespace TpJugadores.Models
 {
     // Acá Jugador hereda los datos de Persona y se conecta con la interfaz IRegistrable
-    public class Jugador : Persona, IRegistrable
+    public class Jugador : Persona, IRegistrable, IEntidad
     {
+
+        // Identificador único del jugador.
+        // Lo usa el Repository para buscar, actualizar o eliminar este jugador.
+        public int id { get; set; }
+
+
+
+
         // Guardamos el número de camiseta
         public int Numero { get; set; }
         // posicion dentro de la cancha
         public string Posicion { get; set; }
 
-       public string EquipoNombre { get; set; }   
+
+        // Guarda el nombre del equipo al que pertenece el jugador.
+        // Se usa para poder recuperar el jugador cuando se lee el JSON.
+        public string EquipoNombre { get; set; }   
 
 
 

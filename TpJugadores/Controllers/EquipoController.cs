@@ -97,12 +97,15 @@ namespace TpJugadores.Controllers
 
             Equipo nuevoEquipo = new Equipo(nombre);
 
+            // Se agrega el equipo al torneo para poder usarlo durante la ejecución del programa
             _torneo.AgregarEquipo(nuevoEquipo);
+
+            // El Repository se encarga de asignar el Id y guardar el nuevo equipo en el archivo JSON.
+            _repo.Agregar(nuevoEquipo);
 
             _view.MostrarMensaje($"El equipo '{nombre}' fue agregado correctamente");
 
-            _torneo.AgregarEquipo(nuevoEquipo);
-            _repo.GuardarTodos(_torneo.Equipos);
+           
         }
         
         public void ListarEquipos()
@@ -291,28 +294,93 @@ namespace TpJugadores.Controllers
 
             foreach (Equipo equipo in _torneo.Equipos)
             {
-                _view.LetrasCentradas("- " + equipo.Nombre);
+                foreach (Jugador jugador in equipo.Jugadores)
+                {
+                    _view.LetrasCentradas(
+                        $"ID: {jugador.id} - {jugador.Nombre} ({equipo.Nombre})"
+                    );
+                }
             }
 
-            Console.WriteLine();
+            Console.Write("Ingrese ID del jugador a eliminar: ");
 
-            string nombre = _view.PedirNombreEquipo();
+            if (!int.TryParse(Console.ReadLine(), out int id))
+            {
+                _view.MostrarError("ID inválido");
+                return;
+            }
 
-            Equipo equipoEliminar = _torneo.BuscarEquipo(nombre);
+            // buscar jugador
+            Jugador jugadorEliminar = null;
+            Equipo equipoPadre = null;
 
-            if (equipoEliminar == null)
+            foreach (var equipo in _torneo.Equipos)
+            {
+                jugadorEliminar = equipo.Jugadores.FirstOrDefault(j => j.id == id);
+
+                if (jugadorEliminar != null)
+                {
+                    equipoPadre = equipo;
+                    break;
+                }
+            }
+
+            if (jugadorEliminar == null)
+            {
+                _view.MostrarError("Jugador no encontrado");
+                return;
+            }
+
+            // eliminar de memoria
+            equipoPadre.Jugadores.Remove(jugadorEliminar);
+
+            // 🔥 eliminar del repo (CORRECTO)
+            _repo.Eliminar(jugadorEliminar.id);
+
+            _view.MostrarMensaje("Jugador eliminado correctamente");
+        }
+
+        public void ActualizarEquipo()
+        {
+            Console.Clear();
+
+            _view.LetrasCentradas("ACTUALIZAR EQUIPO");
+
+            foreach (var equipo in _torneo.Equipos)
+            {
+                _view.LetrasCentradas($"ID: {equipo.id} - {equipo.Nombre}");
+            }
+
+            Console.Write("Ingrese ID del equipo a modificar: ");
+            if (!int.TryParse(Console.ReadLine(), out int id))
+            {
+                _view.MostrarError("ID inválido");
+                return;
+            }
+
+            Equipo equipoEdit = _repo.BuscarPorId(id);
+
+            if (equipoEdit == null)
             {
                 _view.MostrarError("Equipo no encontrado");
                 return;
             }
 
-            _torneo.EliminarEquipo(equipoEliminar);
+            Console.Write("Nuevo nombre: ");
+            string nuevoNombre = Console.ReadLine();
 
-            _view.MostrarMensaje(
-                $"El equipo {equipoEliminar.Nombre} fue eliminado correctamente");
-            
-            _torneo.EliminarEquipo(equipoEliminar);
-            _repo.GuardarTodos(_torneo.Equipos);
+            if (!string.IsNullOrWhiteSpace(nuevoNombre))
+            {
+                equipoEdit.Nombre = nuevoNombre;
+            }
+
+            //  ACTUALIZA SOLO ESE REGISTRO
+            _repo.Actualizar(equipoEdit);
+
+            _torneo.Equipos = _repo.LeerTodos();
+
+            _view.MostrarMensaje("Equipo actualizado correctamente");
         }
+
     }
 }

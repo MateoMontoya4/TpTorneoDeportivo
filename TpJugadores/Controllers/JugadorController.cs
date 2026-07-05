@@ -136,16 +136,20 @@ namespace TpJugadores.Controllers
                 numero,
                 posicion
             );
+
+            // Se guarda el nombre del equipo dentro del jugador.
+            // Así cuando el programa vuelva a abrirse, sabemos a qué equipo pertenece.
             nuevoJugador.EquipoNombre = equipoSeleccionado.Nombre;
             // Se agrega al equipo
             equipoSeleccionado.AgregarJugador(nuevoJugador);
 
-            //  GUARDAR EN JSON
-            _repo.GuardarTodos(
-                _torneo.Equipos.SelectMany(e => e.Jugadores).ToList()
-            );
-
            
+            // GUARDAR CON ID (IMPORTANTE)
+            _repo.Agregar(nuevoJugador); 
+
+            _view.MostrarMensaje("Jugador agregado correctamente");
+
+
 
             // Mensaje de éxito en la pantalla
             Console.ForegroundColor = ConsoleColor.Green;
@@ -173,51 +177,41 @@ namespace TpJugadores.Controllers
 
             Console.WriteLine();
 
+            // Mostrar todos los jugadores con ID
             foreach (Equipo equipo in _torneo.Equipos)
             {
-                _view.LetrasCentradas("- " + equipo.Nombre);
+                foreach (Jugador jugador in equipo.Jugadores)
+                {
+                    _view.LetrasCentradas(
+                        $"ID: {jugador.id} - {jugador.Nombre} ({equipo.Nombre})"
+                    );
+                }
             }
 
             Console.WriteLine();
 
-            string nombreEquipo = _view.PedirNombreEquipo();
+            Console.Write("Ingrese ID del jugador a eliminar: ");
 
-            Equipo equipoSeleccionado = _torneo.BuscarEquipo(nombreEquipo);
-
-            if (equipoSeleccionado == null)
+            if (!int.TryParse(Console.ReadLine(), out int id))
             {
-                _view.MostrarError("Equipo no encontrado");
+                _view.MostrarError("ID inválido");
                 return;
             }
 
-            Console.WriteLine();
+            // Buscar jugador y equipo dueño
+            Jugador jugadorEliminar = null;
+            Equipo equipoPadre = null;
 
-            if (equipoSeleccionado.Jugadores.Count == 0)
+            foreach (var equipo in _torneo.Equipos)
             {
-                _view.MostrarError("Ese equipo no tiene jugadores");
-                return;
+                jugadorEliminar = equipo.Jugadores.FirstOrDefault(j => j.id == id);
+
+                if (jugadorEliminar != null)
+                {
+                    equipoPadre = equipo;
+                    break;
+                }
             }
-
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            _view.LetrasCentradas("JUGADORES DISPONIBLES");
-            Console.ResetColor();
-
-            Console.WriteLine();
-
-            foreach (Jugador jugador in equipoSeleccionado.Jugadores)
-            {
-                _view.LetrasCentradas(
-                    $"{jugador.Nombre} - #{jugador.Numero}");
-            }
-
-            Console.WriteLine();
-
-            Console.Write("Nombre del jugador a eliminar: ");
-            string nombreJugador = Console.ReadLine();
-
-            Jugador jugadorEliminar =
-                equipoSeleccionado.Jugadores.FirstOrDefault(j =>
-                j.Nombre.ToLower() == nombreJugador.ToLower());
 
             if (jugadorEliminar == null)
             {
@@ -225,12 +219,15 @@ namespace TpJugadores.Controllers
                 return;
             }
 
+            // Eliminar del equipo
+            equipoPadre.Jugadores.Remove(jugadorEliminar);
 
-            equipoSeleccionado.EliminarJugador(nombreJugador);
+            // Guardar cambios en JSON
+            _repo.GuardarTodos(
+                _torneo.Equipos.SelectMany(e => e.Jugadores).ToList()
+            );
 
-            _view.MostrarMensaje(
-                $"Jugador {jugadorEliminar.Nombre} eliminado correctamente");
-
+            _view.MostrarMensaje("Jugador eliminado correctamente");
         }
 
 
