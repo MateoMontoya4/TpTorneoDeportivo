@@ -57,10 +57,6 @@ namespace TpJugadores.Models
             }
         }
 
-        // Devuelve el resultado en texto
-        public string MostrarResultado()
-        {
-            return $"{EquipoLocal.Nombre} {GolesLocal} - {GolesVisitante} {EquipoVisitante.Nombre}";
-        }
+      
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace TpJugadores.Models
 {
     // Acá Jugador hereda los datos de Persona y se conecta con la interfaz IRegistrable
-    public class Jugador : Persona, IRegistrable, IEntidad
+    public class Jugador : Persona, IEntidad
     {
 
         // Identificador único del jugador.
@@ -37,12 +37,6 @@ namespace TpJugadores.Models
             
         }
 
-      
-
-        // Este método junta todos los datos del jugador en un solo texto para mostrarlo lindo en pantalla
-        public string ObtenerInfo()
-        {
-            return $"{Nombre} - #{Numero} - {Posicion} ";
-        }
+     
     }
 }

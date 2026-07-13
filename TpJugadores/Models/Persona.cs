@@ -18,9 +18,6 @@ namespace TpJugadores.Models
             Edad = edad;
         }
         
-        public virtual string MostrarDatos()
-        {
-            return $"Nombre: {Nombre} - Edad: {Edad}";
-        }
+       
     }
 }
