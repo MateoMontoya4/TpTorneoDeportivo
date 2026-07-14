@@ -13,6 +13,7 @@ namespace TpJugadores.Controllers
     {
         private Torneo _torneo;
         private TorneoView _view;
+        private EquipoView _equipoView;
         private IRepository<Equipo> _repo;
 
         public EquipoController(Torneo torneo, IRepository<Equipo> repo)
@@ -20,6 +21,7 @@ namespace TpJugadores.Controllers
             _torneo = torneo;
             _view = new TorneoView();
             _repo = repo;
+            _equipoView = new EquipoView();
         }
 
         // Agrega un equipo
@@ -66,8 +68,8 @@ namespace TpJugadores.Controllers
 
             while (true)
             {
-                Console.Write("Nombre del equipo: ");
-                nombre = Console.ReadLine();
+                
+                nombre = _equipoView.PedirNombreEquipo();
 
                 if (nombre == "0")
                 {
@@ -95,7 +97,7 @@ namespace TpJugadores.Controllers
                 break;
             }
 
-            Equipo nuevoEquipo = new Equipo(nombre);
+            Equipo nuevoEquipo = new Equipo(nombre); //creamos el objeto
 
             // Se agrega el equipo al torneo para poder usarlo durante la ejecución del programa
             _torneo.AgregarEquipo(nuevoEquipo);

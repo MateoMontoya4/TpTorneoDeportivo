@@ -49,12 +49,11 @@ namespace TpJugadores.Repository
 
 
 
-        // Busca un registro por su Id.
-        // Lee todos los datos del archivo y devuelve el primero que tenga ese Id.
-        // Si no encuentra ninguno, devuelve null.
-        public T? BuscarPorId(int id)
+        
+     
+        public T? BuscarPorId(int id) // Busca un registro por su Id.
         => LeerTodos().
-            FirstOrDefault(x => x.id == id);
+            FirstOrDefault(x => x.id == id);  // Lee todos los datos del archivo y devuelve el primero que tenga ese Id si no lo encuentra devuelve NULL.
 
 
 
@@ -67,8 +66,8 @@ namespace TpJugadores.Repository
 
             var lista = LeerTodos();
 
-            // Genera un Id autoincremental
-            item.id = lista.Count > 0
+           
+            item.id = lista.Count > 0        // Genera un Id autoincremental
                 ? lista.Max(x => x.id) + 1 
                 : 1;
 
@@ -77,34 +76,34 @@ namespace TpJugadores.Repository
             Persistir(lista);
         }
 
-        // Actualiza un registro existente.
-        // Busca el objeto por su Id y reemplaza la información anterior.
-        public void Actualizar(T item)
+        
+        
+        public void Actualizar(T item) // Busca el objeto por su Id y reemplaza la información anterior.
         {
             var lista = LeerTodos();
 
-            // Busca la posición del objeto dentro de la lista usando su Id.
-            var idx = lista.FindIndex(x => x.id == item.id);
+           
+            var idx = lista.FindIndex(x => x.id == item.id);  // Busca la posición del objeto dentro de la lista usando su Id.
 
-            if(idx >= 0)
+            if (idx >= 0)
             {
                 lista[idx] = item;
 
                 
             }
 
-            // Guarda la lista con los cambios realizados.
-            Persistir(lista);
+            Persistir(lista);  // Guarda la lista con los cambios realizados.
+
 
         }
 
-        // Elimina un registro del archivo usando su Id.
-        public void Eliminar(int id)
+        
+        public void Eliminar(int id) // Elimina un registro del archivo usando su Id.
         {
             var lista = LeerTodos();
 
-            // Elimina todos los registros que tengan ese Id.
-            lista.RemoveAll(e => e.id == id);
+            
+            lista.RemoveAll(e => e.id == id); // Elimina todos los registros que tengan ese Id.
 
             Persistir(lista);
         }

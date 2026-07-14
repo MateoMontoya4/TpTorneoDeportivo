@@ -14,12 +14,16 @@ namespace TpJugadores.Controllers
         private Torneo _torneo;
         private TorneoView _view;
         private IRepository<Jugador> _repo;
+        private JugadorView _jugadorView;
+        private EquipoView _equipoView;
 
         public JugadorController(Torneo torneo, IRepository<Jugador> repo)
         {
             _torneo = torneo;
             _view = new TorneoView();
             _repo = repo;
+            _jugadorView = new JugadorView();
+            _equipoView = new EquipoView();
         }
         // Agrega un jugador a un equipo
         public void AgregarJugador()
@@ -78,10 +82,23 @@ namespace TpJugadores.Controllers
             Console.WriteLine();
 
             // Pedir Nombre del Jugador usando la Vista
-            string nombreJugador = _view.PedirNombreJugador();
+            string nombreJugador = _jugadorView.PedirNombreJugador();
+
+            if (string.IsNullOrWhiteSpace(nombreJugador))
+            {
+                _view.MostrarError("El nombre no puede estar vacío");
+                return;
+            }
+
+
+            if (!nombreJugador.All(c => char.IsLetter(c) || char.IsWhiteSpace(c)))
+            {
+                _view.MostrarError("El nombre solo puede tener letras");
+                return;
+            }
 
             //  Pedir Posición usando la Vista
-            string posicion = _view.PedirPosicion();
+            string posicion = _jugadorView.PedirPosicion();
 
             Console.WriteLine();
 
@@ -89,7 +106,7 @@ namespace TpJugadores.Controllers
             int edad;
             while (true)
             {
-                edad = _view.PedirEdad();
+                edad = _jugadorView.PedirEdad();
 
                 if (edad < 15 || edad > 50)
                 {
@@ -105,7 +122,7 @@ namespace TpJugadores.Controllers
             int numero;
             while (true)
             {
-                numero = _view.PedirNumero();
+                numero = _jugadorView.PedirNumero();
 
                 if (numero < 1 || numero > 99)
                 {
@@ -289,13 +306,13 @@ namespace TpJugadores.Controllers
             Console.WriteLine();
 
             // Pedir nueva posición usando el mismo menú que AgregarJugador
-            string nuevaPosicion = _view.PedirPosicion();
+            string nuevaPosicion = _jugadorView.PedirPosicion();
             jugadorEdit.Posicion = nuevaPosicion;
 
             Console.WriteLine();
 
             // Pedir nuevo número de camiseta
-            int nuevoNumero = _view.PedirNumero();
+            int nuevoNumero = _jugadorView.PedirNumero();
 
             // Verificar que el número no esté repetido dentro del mismo equipo
             Equipo equipoJugador = _torneo.BuscarEquipo(jugadorEdit.EquipoNombre);
@@ -369,7 +386,7 @@ namespace TpJugadores.Controllers
 
             Console.WriteLine();
 
-            string nombre = _view.PedirNombreEquipo();
+            string nombre = _equipoView.PedirNombreEquipo();
 
             Equipo equipoSeleccionado = _torneo.BuscarEquipo(nombre);
 

@@ -8,6 +8,7 @@ namespace TpJugadores.Controllers
     {
         private Torneo _torneo;
         private TorneoView _view;
+       
 
         private IRepository<Equipo> _repoEquipos;
         private IRepository<Jugador> _repoJugadores;
@@ -33,8 +34,8 @@ namespace TpJugadores.Controllers
 
             // Primero se cargan los equipos.
             // Después se cargan los jugadores porque necesitan que el equipo ya exista.
-            CargarEquipos();     // 👈 PRIMERO
-            CargarJugadores();   // 👈 DESPUÉS
+            CargarEquipos();     
+            CargarJugadores();  
 
         }
 
@@ -42,7 +43,7 @@ namespace TpJugadores.Controllers
         // y los agrega nuevamente al torneo al iniciar el programa.
         private void CargarEquipos()
         {
-            var equipos = _repoEquipos.LeerTodos();
+            var equipos = _repoEquipos.LeerTodos(); 
 
             if (equipos != null && equipos.Count > 0)
             {

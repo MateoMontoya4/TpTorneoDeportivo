@@ -14,12 +14,14 @@ namespace TpJugadores.Controllers
         private Torneo _torneo;
         private TorneoView _view;
         private IRepository<Equipo> _repo;
+        private PartidoView _partidoView;
 
         public PartidoController(Torneo torneo, IRepository<Equipo> repo)
         {
             _torneo = torneo;
             _view = new TorneoView();
             _repo = repo;
+            _partidoView = new PartidoView();
         }
         public void RegistrarPartido()
         {
@@ -83,8 +85,8 @@ namespace TpJugadores.Controllers
 
             Console.WriteLine();
 
-            int golesLocal = _view.PedirGolesLocal();
-            int golesVisitante = _view.PedirGolesVisitante();
+            int golesLocal = _partidoView.PedirGolesLocal();
+            int golesVisitante = _partidoView.PedirGolesVisitante();
 
             Partido partido = new Partido(           
                 local,

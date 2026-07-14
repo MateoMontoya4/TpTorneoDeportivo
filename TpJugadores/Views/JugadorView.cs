@@ -20,27 +20,9 @@ namespace TpJugadores.Views
         // Pide nombre del jugador
         public string PedirNombreJugador()
         {
-            string nombre;
+            Console.Write("Nombre del jugador: ");
 
-            while (true)
-            {
-                Console.Write("Nombre del jugador: ");
-                nombre = Console.ReadLine();
-
-                if (string.IsNullOrWhiteSpace(nombre))
-                {
-                    MostrarError("El nombre no puede estar vacio");
-                    continue;
-                }
-
-                if (!nombre.All(c => char.IsLetter(c) || char.IsWhiteSpace(c)))
-                {
-                    MostrarError("Solo se permiten letras");
-                    continue;
-                }
-
-                return nombre;
-            }
+            return Console.ReadLine();
         }
 
 
@@ -60,9 +42,6 @@ namespace TpJugadores.Views
 
             return edad;
         }
-
-
-
 
 
         public string PedirPosicion()
