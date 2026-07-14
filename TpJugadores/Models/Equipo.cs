@@ -6,24 +6,26 @@ using System.Threading.Tasks;
 
 namespace TpJugadores.Models
 {
-    //La clase Equipo implementa la interfaz IPuntuable para calcular sus puntos
-    public class Equipo : IPuntuable, IEntidad
+    
+    public class Equipo : IPuntuable, IEntidad //La clase Equipo implementa la interfaz IPuntuable para calcular sus puntos
     {
         public int id { get; set; }
+     
+        public string Nombre { get; set; } // Nombre del equipo
 
-
-        // Nombre del equipo
-        public string Nombre { get; set; }
-
-        // Contadores para las estadísticas del torneo
         public int Victorias { get; set; }
-        public int Empates { get; set; }
+
+        public int Empates { get; set; }    // Contadores para las estadísticas del torneo
+
         public int Derrotas { get; set; }
+  
+        public List<Jugador> Jugadores { get; set; } // La lista donde guardamos a todos los jugadores que pertenecen a este equipo
 
-
-        // La lista donde guardamos a todos los jugadores que pertenecen a este equipo
-        public List<Jugador> Jugadores { get; set; }
-
+      
+        
+        
+        
+        
         // El constructor mete el nombre del equipo y arranca todo en cero y la lista vacía
         public Equipo(string nombre)
         {

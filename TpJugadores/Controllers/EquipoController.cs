@@ -14,7 +14,7 @@ namespace TpJugadores.Controllers
         private Torneo _torneo;
         private TorneoView _view;
         private EquipoView _equipoView;
-        private IRepository<Equipo> _repo;
+        private IRepository<Equipo> _repo;  
 
         public EquipoController(Torneo torneo, IRepository<Equipo> repo)
         {
